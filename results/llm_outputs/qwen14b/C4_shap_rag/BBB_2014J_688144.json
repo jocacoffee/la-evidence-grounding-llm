@@ -1,0 +1,226 @@
+{
+ "enrolment_id": "BBB_2014J_688144",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E12",
+  "E14",
+  "E16",
+  "E21",
+  "E22",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 688144, module BBB, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 57% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: clicks_vs_cohort_median (value 0.02, see E16) increases predicted risk by 22.3 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: mean_score (value 100, see E21) decreases predicted risk by 12.0 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 3.4 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E12] Clicks on the module homepage up to the end of week 4: 0\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +1.00\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.02\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 100\n[E22] Assessments submitted after their deadline (before the end of week 4): 1\n[E26] Highest education level on entry: A Level or Equivalent\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"Clicks on the module homepage up to the end of week 4: 0\", \"evidence_ids\": [\"E12\"]}, {\"statement\": \"Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +1.00\", \"evidence_ids\": [\"E14\"]}, {\"statement\": \"Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.02\", \"evidence_ids\": [\"E16\"]}, {\"statement\": \"Mean score (0-100) of assessments submitted before the end of week 4: 100\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"Assessments submitted after their deadline (before the end of week 4): 1\", \"evidence_ids\": [\"E22\"]}, {\"statement\": \"Highest education level on entry: A Level or Equivalent\", \"evidence_ids\": [\"E26\"]}], \"model_inferences\": [{\"statement\": \"Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 57%\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"SHAP rank 1: clicks_vs_cohort_median (value 0.02, see E16) increases predicted risk by 22.3 percentage points (association in the model, not a cause)\", \"evidence_ids\": [\"X1\"]}, {\"statement\": \"SHAP rank 2: mean_score (value 100, see E21) decreases predicted risk by 12.0 percentage points (association in the model, not a cause)\", \"evidence_ids\": [\"X2\"]}, {\"statement\": \"SHAP rank 3: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 3.4 percentage points (association in the model, not a cause)\", \"evidence_ids\": [\"X3\"]}], \"recommendations\": [{\"action\": \"Monitor the student's activity closely, as their clicks are significantly below the cohort median (E16), which is associated with increased risk (X1).\", \"rationale\": \"The student's clicks are significantly below the cohort median, which is associated with increased risk (X1).\", \"evidence_ids\": [\"E16\", \"X1\"]}, {\"action\": \"Encourage the student to maintain their high assessment performance (E21), as this is associated with decreased risk (X2).\", \"rationale\": \"The student has a high assessment score, which is associated with decreased risk (X2).\", \"evidence_ids\": [\"E21\", \"X2\"]}, {\"action\": \"Provide support for time management, as the student has submitted one assessment late (E22).\", \"rationale\": \"The student has submitted an assessment after its deadline, which may indicate time management challenges.\", \"evidence_ids\": [\"E22\"]}], \"evidence_limitations\": [\"The model's prediction of an unsuccessful outcome (M1) is based on associations, not causality. The evidence does not provide information about the student's personal circumstances or specific difficulties.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "Clicks on the module homepage up to the end of week 4: 0",
+    "evidence_ids": [
+     "E12"
+    ]
+   },
+   {
+    "statement": "Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +1.00",
+    "evidence_ids": [
+     "E14"
+    ]
+   },
+   {
+    "statement": "Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.02",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "Mean score (0-100) of assessments submitted before the end of week 4: 100",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "Assessments submitted after their deadline (before the end of week 4): 1",
+    "evidence_ids": [
+     "E22"
+    ]
+   },
+   {
+    "statement": "Highest education level on entry: A Level or Equivalent",
+    "evidence_ids": [
+     "E26"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 57%",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "SHAP rank 1: clicks_vs_cohort_median (value 0.02, see E16) increases predicted risk by 22.3 percentage points (association in the model, not a cause)",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "SHAP rank 2: mean_score (value 100, see E21) decreases predicted risk by 12.0 percentage points (association in the model, not a cause)",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "SHAP rank 3: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 3.4 percentage points (association in the model, not a cause)",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor the student's activity closely, as their clicks are significantly below the cohort median (E16), which is associated with increased risk (X1).",
+    "rationale": "The student's clicks are significantly below the cohort median, which is associated with increased risk (X1).",
+    "evidence_ids": [
+     "E16",
+     "X1"
+    ]
+   },
+   {
+    "action": "Encourage the student to maintain their high assessment performance (E21), as this is associated with decreased risk (X2).",
+    "rationale": "The student has a high assessment score, which is associated with decreased risk (X2).",
+    "evidence_ids": [
+     "E21",
+     "X2"
+    ]
+   },
+   {
+    "action": "Provide support for time management, as the student has submitted one assessment late (E22).",
+    "rationale": "The student has submitted an assessment after its deadline, which may indicate time management challenges.",
+    "evidence_ids": [
+     "E22"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of an unsuccessful outcome (M1) is based on associations, not causality. The evidence does not provide information about the student's personal circumstances or specific difficulties."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 759,
+  "completion_tokens": 744,
+  "total_tokens": 1503,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 64.36,
+ "model": "qwen/qwen3-14b"
+}

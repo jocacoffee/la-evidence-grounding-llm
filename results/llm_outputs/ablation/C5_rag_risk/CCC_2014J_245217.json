@@ -1,0 +1,203 @@
+{
+ "enrolment_id": "CCC_2014J_245217",
+ "condition": "C5_rag_risk",
+ "context_ids": [
+  "M1",
+  "E24",
+  "E25",
+  "E14",
+  "E5",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 245217, module CCC, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 70% (model inference, not an observed fact)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E24] Number of previous attempts at this module: 1\n[E25] Total credits of modules being studied in this presentation: 250\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +1.00\n[E5] VLE clicks in weeks 1-2 (days 0-13): 0\n[E27] Registration day relative to module start (negative = days before start): -18\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has completed 0 VLE clicks during weeks 1-2 (days 0-13).\", \"evidence_ids\": [\"E5\"]}, {\"statement\": \"The student's activity trend index is +1.00, indicating all recorded activity occurred in weeks 3-4.\", \"evidence_ids\": [\"E14\"]}, {\"statement\": \"The student registered 18 days before the module start date.\", \"evidence_ids\": [\"E27\"]}, {\"statement\": \"The student is enrolled in 250 total credits for this presentation.\", \"evidence_ids\": [\"E25\"]}, {\"statement\": \"This is the student's first attempt at this module.\", \"evidence_ids\": [\"E24\"]}], \"model_inferences\": [{\"statement\": \"The predictive model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"recommendations\": [{\"action\": \"Initiate immediate engagement monitoring.\", \"rationale\": \"The student has zero activity in the first two weeks (E5), yet the model predicts a high risk of failure (M1). The sudden activity in weeks 3-4 (E14) may be insufficient to sustain progress through the full module duration.\", \"evidence_ids\": [\"E5\", \"M1\", \"E14\"]}, {\"action\": \"Proactively contact the student to verify their current status and learning plan.\", \"rationale\": \"Given the high predicted risk (M1) and the lack of early engagement (E5), it is critical to determine if the recent activity in weeks 3-4 represents a genuine recovery or a temporary spike before a potential drop-off.\", \"evidence_ids\": [\"M1\", \"E5\", \"E14\"]}, {\"action\": \"Review the student's workload distribution across the 250 credits (E25).\", \"rationale\": \"The student is studying a high credit load (E25). Ensure the recent activity in weeks 3-4 is not solely due to a backlog of work that cannot be completed by the deadline.\", \"evidence_ids\": [\"E25\", \"E14\"]}], \"evidence_limitations\": [\"The provided data only covers weeks 1-4 of the module; long-term trends and final outcomes are unknown.\", \"The activity trend index (E14) is based on a limited window (weeks 3-4) and does not capture activity in weeks 5 and beyond.\", \"The model inference (M1) is a statistical prediction and may not accurately reflect the individual student's specific circumstances or potential for recovery.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has completed 0 VLE clicks during weeks 1-2 (days 0-13).",
+    "evidence_ids": [
+     "E5"
+    ]
+   },
+   {
+    "statement": "The student's activity trend index is +1.00, indicating all recorded activity occurred in weeks 3-4.",
+    "evidence_ids": [
+     "E14"
+    ]
+   },
+   {
+    "statement": "The student registered 18 days before the module start date.",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The student is enrolled in 250 total credits for this presentation.",
+    "evidence_ids": [
+     "E25"
+    ]
+   },
+   {
+    "statement": "This is the student's first attempt at this module.",
+    "evidence_ids": [
+     "E24"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The predictive model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Initiate immediate engagement monitoring.",
+    "rationale": "The student has zero activity in the first two weeks (E5), yet the model predicts a high risk of failure (M1). The sudden activity in weeks 3-4 (E14) may be insufficient to sustain progress through the full module duration.",
+    "evidence_ids": [
+     "E5",
+     "M1",
+     "E14"
+    ]
+   },
+   {
+    "action": "Proactively contact the student to verify their current status and learning plan.",
+    "rationale": "Given the high predicted risk (M1) and the lack of early engagement (E5), it is critical to determine if the recent activity in weeks 3-4 represents a genuine recovery or a temporary spike before a potential drop-off.",
+    "evidence_ids": [
+     "M1",
+     "E5",
+     "E14"
+    ]
+   },
+   {
+    "action": "Review the student's workload distribution across the 250 credits (E25).",
+    "rationale": "The student is studying a high credit load (E25). Ensure the recent activity in weeks 3-4 is not solely due to a backlog of work that cannot be completed by the deadline.",
+    "evidence_ids": [
+     "E25",
+     "E14"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The provided data only covers weeks 1-4 of the module; long-term trends and final outcomes are unknown.",
+   "The activity trend index (E14) is based on a limited window (weeks 3-4) and does not capture activity in weeks 5 and beyond.",
+   "The model inference (M1) is a statistical prediction and may not accurately reflect the individual student's specific circumstances or potential for recovery."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 570,
+  "completion_tokens": 568,
+  "total_tokens": 1138,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 23.62,
+ "model": "qwen/qwen3.5-9b"
+}

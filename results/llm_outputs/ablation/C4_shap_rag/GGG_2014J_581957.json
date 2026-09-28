@@ -1,0 +1,230 @@
+{
+ "enrolment_id": "GGG_2014J_581957",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E1",
+  "E3",
+  "E4",
+  "E11",
+  "E13",
+  "E16",
+  "E17",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 581957, module GGG, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 50% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: highest_education (value Lower Than A Level, see E26) increases predicted risk by 7.6 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 2.34, see E16) decreases predicted risk by 6.6 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: n_assessments_due (value 0, see E17) decreases predicted risk by 6.2 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E1] Total VLE clicks from registration up to the end of week 4: 152\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 21\n[E4] VLE clicks before the module start (day < 0): 115\n[E11] Clicks on quizzes up to the end of week 4: 2\n[E13] Clicks on resources/URLs/subpages up to the end of week 4: 110\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 2.34\n[E17] Number of assessments (TMA/CMA) with a deadline before the end of week 4: 0\n[E26] Highest education level on entry: Lower Than A Level\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has accessed 21 distinct VLE materials out of the total available by the end of week 4.\", \"evidence_ids\": [\"E3\"]}, {\"statement\": \"The student has clicked on 2 quizzes by the end of week 4.\", \"evidence_ids\": [\"E11\"]}, {\"statement\": \"The student has 0 assessments with a deadline before the end of week 4.\", \"evidence_ids\": [\"E17\"]}, {\"statement\": \"The student's highest education level on entry was Lower Than A Level.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The student's total VLE clicks are 2.34 times the cohort median.\", \"evidence_ids\": [\"E16\"]}], \"model_inferences\": [{\"statement\": \"The model estimates a 50% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"The model associates 'Lower Than A Level' education with an increased predicted risk (+7.6 percentage points).\", \"evidence_ids\": [\"X1\", \"E26\"]}, {\"statement\": \"The model associates a high volume of VLE clicks (2.34x cohort median) with a decreased predicted risk (-6.6 percentage points).\", \"evidence_ids\": [\"X2\", \"E16\"]}, {\"statement\": \"The model associates having 0 assessments due with a decreased predicted risk (-6.2 percentage points).\", \"evidence_ids\": [\"X3\", \"E17\"]}], \"recommendations\": [{\"action\": \"Monitor assessment engagement closely.\", \"rationale\": \"The student has 0 assessments due by the end of week 4 (E17). While the model associates this with lower risk (X3), the absence of any assessment activity combined with low quiz engagement (E11) suggests a potential disengagement pattern that warrants observation.\", \"evidence_ids\": [\"E11\", \"E17\", \"X3\"]}, {\"action\": \"Encourage early submission of upcoming assessments.\", \"rationale\": \"Given the high predicted risk of failure or withdrawal (M1) and the fact that no assessments are currently due, it is critical to ensure the student engages with the first assessment as soon as its deadline approaches to prevent a negative trajectory.\", \"evidence_ids\": [\"M1\", \"E17\"]}, {\"action\": \"Provide targeted support regarding academic background.\", \"rationale\": \"The student's entry education level is 'Lower Than A Level' (E26), which the model identifies as a significant risk factor (X1). Support should focus on bridging any foundational knowledge gaps that may arise from this background.\", \"evidence_ids\": [\"E26\", \"X1\"]}], \"evidence_limitations\": [\"The model's high risk prediction (M1) is based on associations (e.g., education level) rather than direct causal evidence of current performance failure.\", \"The data is limited to the end of week 4; long-term trends and final assessment results are not yet available to confirm the model's risk prediction.\", \"The model indicates that high VLE click volume (E16) mitigates risk, but the specific content accessed (E3) does not reveal if the student is engaging with high-value materials or just browsing.\", \"There is no evidence provided regarding the student's actual grades or submission status for assessments that may be due after week 4.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has accessed 21 distinct VLE materials out of the total available by the end of week 4.",
+    "evidence_ids": [
+     "E3"
+    ]
+   },
+   {
+    "statement": "The student has clicked on 2 quizzes by the end of week 4.",
+    "evidence_ids": [
+     "E11"
+    ]
+   },
+   {
+    "statement": "The student has 0 assessments with a deadline before the end of week 4.",
+    "evidence_ids": [
+     "E17"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry was Lower Than A Level.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The student's total VLE clicks are 2.34 times the cohort median.",
+    "evidence_ids": [
+     "E16"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 50% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The model associates 'Lower Than A Level' education with an increased predicted risk (+7.6 percentage points).",
+    "evidence_ids": [
+     "X1",
+     "E26"
+    ]
+   },
+   {
+    "statement": "The model associates a high volume of VLE clicks (2.34x cohort median) with a decreased predicted risk (-6.6 percentage points).",
+    "evidence_ids": [
+     "X2",
+     "E16"
+    ]
+   },
+   {
+    "statement": "The model associates having 0 assessments due with a decreased predicted risk (-6.2 percentage points).",
+    "evidence_ids": [
+     "X3",
+     "E17"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor assessment engagement closely.",
+    "rationale": "The student has 0 assessments due by the end of week 4 (E17). While the model associates this with lower risk (X3), the absence of any assessment activity combined with low quiz engagement (E11) suggests a potential disengagement pattern that warrants observation.",
+    "evidence_ids": [
+     "E11",
+     "E17",
+     "X3"
+    ]
+   },
+   {
+    "action": "Encourage early submission of upcoming assessments.",
+    "rationale": "Given the high predicted risk of failure or withdrawal (M1) and the fact that no assessments are currently due, it is critical to ensure the student engages with the first assessment as soon as its deadline approaches to prevent a negative trajectory.",
+    "evidence_ids": [
+     "M1",
+     "E17"
+    ]
+   },
+   {
+    "action": "Provide targeted support regarding academic background.",
+    "rationale": "The student's entry education level is 'Lower Than A Level' (E26), which the model identifies as a significant risk factor (X1). Support should focus on bridging any foundational knowledge gaps that may arise from this background.",
+    "evidence_ids": [
+     "E26",
+     "X1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's high risk prediction (M1) is based on associations (e.g., education level) rather than direct causal evidence of current performance failure.",
+   "The data is limited to the end of week 4; long-term trends and final assessment results are not yet available to confirm the model's risk prediction.",
+   "The model indicates that high VLE click volume (E16) mitigates risk, but the specific content accessed (E3) does not reveal if the student is engaging with high-value materials or just browsing.",
+   "There is no evidence provided regarding the student's actual grades or submission status for assessments that may be due after week 4."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 769,
+  "completion_tokens": 736,
+  "total_tokens": 1505,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 34.35,
+ "model": "qwen/qwen3.5-9b"
+}

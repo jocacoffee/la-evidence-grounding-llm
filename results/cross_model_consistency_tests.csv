@@ -1,0 +1,10 @@
+pair,metric,a,b,mean_diff,p_wilcoxon
+gemma-4-e4b vs qwen3-14b,feature_jaccard,C3_rag,C2_student_data,0.7288727826606615,1.1272521612654317e-17
+gemma-4-e4b vs qwen3-14b,feature_jaccard,C4_shap_rag,C3_rag,-0.030231046731046738,0.03894500757924833
+gemma-4-e4b vs qwen3-14b,feature_jaccard,C4_shap_rag,C2_student_data,0.6969589613529007,5.764399793324031e-18
+qwen3.5-9b vs gemma-4-e4b,feature_jaccard,C3_rag,C2_student_data,0.22780031784520952,1.6776697833942235e-12
+qwen3.5-9b vs gemma-4-e4b,feature_jaccard,C4_shap_rag,C3_rag,-0.08659809634809636,0.0004080006642229609
+qwen3.5-9b vs gemma-4-e4b,feature_jaccard,C4_shap_rag,C2_student_data,0.14120222149711315,1.2589923268157107e-07
+qwen3.5-9b vs qwen3-14b,feature_jaccard,C3_rag,C2_student_data,0.7058690753690753,8.354246888832202e-18
+qwen3.5-9b vs qwen3-14b,feature_jaccard,C4_shap_rag,C3_rag,0.005926379176379174,0.22091904620389358
+qwen3.5-9b vs qwen3-14b,feature_jaccard,C4_shap_rag,C2_student_data,0.7117954545454546,3.868256010507818e-18

@@ -1,0 +1,185 @@
+{
+ "enrolment_id": "AAA_2014J_342007",
+ "condition": "C3_rag",
+ "context_ids": [
+  "E23",
+  "E24",
+  "E18",
+  "E19",
+  "E20"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 342007, module AAA, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E23] Has an assessment result transferred (banked) from a previous presentation: yes\n[E24] Number of previous attempts at this module: 1\n[E18] Number of those assessments submitted before the end of week 4: 0\n[E19] Submission rate of assessments due before the end of week 4: 0%\n[E20] Total assessment submissions (any deadline) before the end of week 4: 0\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has not submitted any assessments due before the end of week 4.\", \"evidence_ids\": [\"E18\", \"E19\"]}, {\"statement\": \"The student has not made any assessment submissions (regardless of deadline) before the end of week 4.\", \"evidence_ids\": [\"E20\"]}, {\"statement\": \"The student has one previous attempt at this module.\", \"evidence_ids\": [\"E24\"]}, {\"statement\": \"The student has a banked assessment result from a previous presentation.\", \"evidence_ids\": [\"E23\"]}], \"model_inferences\": [], \"recommendations\": [{\"action\": \"Contact the student immediately to verify their engagement status and clarify submission deadlines.\", \"rationale\": \"The student has zero submissions for all assessments due before week 4, which is a critical deviation from expected participation patterns.\", \"evidence_ids\": [\"E18\", \"E20\"]}, {\"action\": \"Review the student's banked assessment result to determine if it can be applied to the current module requirements or if they are expected to complete new work.\", \"rationale\": \"While the student has a banked result, they have not submitted any new assessments, suggesting they may be relying on previous work or are disengaged.\", \"evidence_ids\": [\"E23\"]}, {\"action\": \"Check if the student is enrolled in the current presentation or if there is a registration issue preventing access to the module.\", \"rationale\": \"The lack of any submissions combined with a previous attempt suggests a potential administrative or access barrier rather than just a delay.\", \"evidence_ids\": [\"E24\"]}], \"evidence_limitations\": [\"Insufficient data exists to determine if the lack of submissions is due to technical issues, personal circumstances, or a deliberate decision to rely on the banked result.\", \"No data is available regarding the student's performance on the banked assessment to assess the quality of the transferred result.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has not submitted any assessments due before the end of week 4.",
+    "evidence_ids": [
+     "E18",
+     "E19"
+    ]
+   },
+   {
+    "statement": "The student has not made any assessment submissions (regardless of deadline) before the end of week 4.",
+    "evidence_ids": [
+     "E20"
+    ]
+   },
+   {
+    "statement": "The student has one previous attempt at this module.",
+    "evidence_ids": [
+     "E24"
+    ]
+   },
+   {
+    "statement": "The student has a banked assessment result from a previous presentation.",
+    "evidence_ids": [
+     "E23"
+    ]
+   }
+  ],
+  "model_inferences": [],
+  "recommendations": [
+   {
+    "action": "Contact the student immediately to verify their engagement status and clarify submission deadlines.",
+    "rationale": "The student has zero submissions for all assessments due before week 4, which is a critical deviation from expected participation patterns.",
+    "evidence_ids": [
+     "E18",
+     "E20"
+    ]
+   },
+   {
+    "action": "Review the student's banked assessment result to determine if it can be applied to the current module requirements or if they are expected to complete new work.",
+    "rationale": "While the student has a banked result, they have not submitted any new assessments, suggesting they may be relying on previous work or are disengaged.",
+    "evidence_ids": [
+     "E23"
+    ]
+   },
+   {
+    "action": "Check if the student is enrolled in the current presentation or if there is a registration issue preventing access to the module.",
+    "rationale": "The lack of any submissions combined with a previous attempt suggests a potential administrative or access barrier rather than just a delay.",
+    "evidence_ids": [
+     "E24"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "Insufficient data exists to determine if the lack of submissions is due to technical issues, personal circumstances, or a deliberate decision to rely on the banked result.",
+   "No data is available regarding the student's performance on the banked assessment to assess the quality of the transferred result."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 460,
+  "completion_tokens": 418,
+  "total_tokens": 878,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 16.8,
+ "model": "qwen/qwen3.5-9b"
+}

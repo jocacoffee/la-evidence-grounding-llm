@@ -1,0 +1,227 @@
+{
+ "enrolment_id": "FFF_2014J_592558",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E3",
+  "E7",
+  "E9",
+  "E15",
+  "E21",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 592558, module FFF, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 56% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: highest_education (value Lower Than A Level, see E26) increases predicted risk by 6.3 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: mean_score (value 70, see E21) increases predicted risk by 3.8 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: distinct_materials (value 46, see E3) increases predicted risk by 2.3 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 46\n[E7] VLE clicks in week 4 (days 21-27): 182\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 251\n[E15] Days between the last VLE activity and the end of week 4: 0\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 70\n[E26] Highest education level on entry: Lower Than A Level\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"Number of distinct VLE materials accessed up to the end of week 4: 46\", \"evidence_ids\": [\"E3\"]}, {\"statement\": \"VLE clicks in week 4 (days 21-27): 182\", \"evidence_ids\": [\"E7\"]}, {\"statement\": \"Clicks on course content pages (oucontent) up to the end of week 4: 251\", \"evidence_ids\": [\"E9\"]}, {\"statement\": \"Days between the last VLE activity and the end of week 4: 0\", \"evidence_ids\": [\"E15\"]}, {\"statement\": \"Mean score (0-100) of assessments submitted before the end of week 4: 70\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"Highest education level on entry: Lower Than A Level\", \"evidence_ids\": [\"E26\"]}], \"model_inferences\": [{\"statement\": \"Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 56%\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"Highest_education (value Lower Than A Level) increases predicted risk by 6.3 percentage points\", \"evidence_ids\": [\"X1\"]}, {\"statement\": \"Mean_score (value 70) increases predicted risk by 3.8 percentage points\", \"evidence_ids\": [\"X2\"]}, {\"statement\": \"Distinct_materials (value 46) increases predicted risk by 2.3 percentage points\", \"evidence_ids\": [\"X3\"]}], \"recommendations\": [{\"action\": \"Provide additional academic support or resources to the student, particularly focusing on areas where they may need more guidance based on their educational background (Lower Than A Level).\", \"rationale\": \"The student's highest education level is associated with an increased risk of an unsuccessful outcome, suggesting that they may benefit from targeted support.\" , \"evidence_ids\": [\"X1\"]}, {\"action\": \"Encourage the student to maintain their engagement with course content and assessments, as they have demonstrated consistent activity (e.g., VLE clicks, content page visits).\", \"rationale\": \"The student has shown active engagement with course materials and assessments, which is a positive indicator for continued success.\", \"evidence_ids\": [\"E7\", \"E9\", \"E15\"]}, {\"action\": \"Monitor the student's performance closely, especially in light of their mean score (70) and consider offering additional support or interventions if needed.\", \"rationale\": \"The student's mean score is associated with an increased risk of an unsuccessful outcome, indicating the need for continued monitoring and possible support.\", \"evidence_ids\": [\"X2\", \"E21\"]}], \"evidence_limitations\": [\"The model's prediction of an unsuccessful outcome (56%) is based on associations rather than causality, and should be interpreted with caution. There is no direct evidence of specific difficulties or challenges the student may be facing.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "Number of distinct VLE materials accessed up to the end of week 4: 46",
+    "evidence_ids": [
+     "E3"
+    ]
+   },
+   {
+    "statement": "VLE clicks in week 4 (days 21-27): 182",
+    "evidence_ids": [
+     "E7"
+    ]
+   },
+   {
+    "statement": "Clicks on course content pages (oucontent) up to the end of week 4: 251",
+    "evidence_ids": [
+     "E9"
+    ]
+   },
+   {
+    "statement": "Days between the last VLE activity and the end of week 4: 0",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "statement": "Mean score (0-100) of assessments submitted before the end of week 4: 70",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "Highest education level on entry: Lower Than A Level",
+    "evidence_ids": [
+     "E26"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 56%",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "Highest_education (value Lower Than A Level) increases predicted risk by 6.3 percentage points",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "Mean_score (value 70) increases predicted risk by 3.8 percentage points",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "Distinct_materials (value 46) increases predicted risk by 2.3 percentage points",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Provide additional academic support or resources to the student, particularly focusing on areas where they may need more guidance based on their educational background (Lower Than A Level).",
+    "rationale": "The student's highest education level is associated with an increased risk of an unsuccessful outcome, suggesting that they may benefit from targeted support.",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "action": "Encourage the student to maintain their engagement with course content and assessments, as they have demonstrated consistent activity (e.g., VLE clicks, content page visits).",
+    "rationale": "The student has shown active engagement with course materials and assessments, which is a positive indicator for continued success.",
+    "evidence_ids": [
+     "E7",
+     "E9",
+     "E15"
+    ]
+   },
+   {
+    "action": "Monitor the student's performance closely, especially in light of their mean score (70) and consider offering additional support or interventions if needed.",
+    "rationale": "The student's mean score is associated with an increased risk of an unsuccessful outcome, indicating the need for continued monitoring and possible support.",
+    "evidence_ids": [
+     "X2",
+     "E21"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of an unsuccessful outcome (56%) is based on associations rather than causality, and should be interpreted with caution. There is no direct evidence of specific difficulties or challenges the student may be facing."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 691,
+  "completion_tokens": 655,
+  "total_tokens": 1346,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 52.49,
+ "model": "qwen/qwen3-14b"
+}

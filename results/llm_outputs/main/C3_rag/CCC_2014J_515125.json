@@ -1,0 +1,205 @@
+{
+ "enrolment_id": "CCC_2014J_515125",
+ "condition": "C3_rag",
+ "context_ids": [
+  "E15",
+  "E6",
+  "E8",
+  "E11",
+  "E2"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 515125, module CCC, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E15] Days between the last VLE activity and the end of week 4: 44\n[E6] VLE clicks in weeks 3-4 (days 14-27): 0\n[E8] Days with VLE activity in weeks 3-4 (out of 14): 0\n[E11] Clicks on quizzes up to the end of week 4: 0\n[E2] Number of distinct days with VLE activity up to the end of week 4: 1\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has not engaged with the Virtual Learning Environment (VLE) during weeks 3 and 4, as indicated by zero clicks and zero days of activity.\", \"evidence_ids\": [\"E6\", \"E8\"]}, {\"statement\": \"The student has not attempted any quizzes up to the end of week 4.\", \"evidence_ids\": [\"E11\"]}, {\"statement\": \"The student's most recent VLE activity occurred 44 days prior to the end of week 4.\", \"evidence_ids\": [\"E15\"]}, {\"statement\": \"The student has only logged into the VLE on one distinct day up to the end of week 4.\", \"evidence_ids\": [\"E2\"]}], \"model_inferences\": [{\"statement\": \"The student is currently disengaged from the module activities.\", \"evidence_ids\": [\"E6\", \"E8\", \"E11\", \"E15\", \"E2\"]}, {\"statement\": \"The student is at high risk of falling behind or failing the module due to the extended period of inactivity.\", \"evidence_ids\": [\"E15\", \"E6\", \"E8\"]}], \"recommendations\": [{\"action\": \"Contact the student immediately to check on their well-being and understanding of the module content.\", \"rationale\": \"The student has been inactive for 44 days, which suggests a significant drop-off in engagement.\", \"evidence_ids\": [\"E15\"]}, {\"action\": \"Review the student's initial engagement patterns to determine if the lack of activity is consistent with their behavior throughout the course or a recent change.\", \"rationale\": \"The student has only one distinct day of activity recorded up to week 4, but the total number of clicks or days is not provided for the entire course duration, making it impossible to distinguish between a new pattern and a consistent pattern.\", \"evidence_ids\": [\"E2\"]}, {\"action\": \"Provide a gentle reminder or a supportive message encouraging the student to resume their studies.\", \"rationale\": \"The student has not completed any quizzes or engaged with the VLE in weeks 3 and 4, which may indicate they have missed important deadlines or content.\", \"evidence_ids\": [\"E6\", \"E8\", \"E11\"]}], \"evidence_limitations\": [\"The data does not include information about the student's performance on assessments or their prior engagement levels, which would help determine if this inactivity is a new issue or a consistent pattern.\", \"The data does not specify the total number of weeks in the module, which limits the ability to assess the severity of the inactivity relative to the course timeline.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has not engaged with the Virtual Learning Environment (VLE) during weeks 3 and 4, as indicated by zero clicks and zero days of activity.",
+    "evidence_ids": [
+     "E6",
+     "E8"
+    ]
+   },
+   {
+    "statement": "The student has not attempted any quizzes up to the end of week 4.",
+    "evidence_ids": [
+     "E11"
+    ]
+   },
+   {
+    "statement": "The student's most recent VLE activity occurred 44 days prior to the end of week 4.",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "statement": "The student has only logged into the VLE on one distinct day up to the end of week 4.",
+    "evidence_ids": [
+     "E2"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The student is currently disengaged from the module activities.",
+    "evidence_ids": [
+     "E6",
+     "E8",
+     "E11",
+     "E15",
+     "E2"
+    ]
+   },
+   {
+    "statement": "The student is at high risk of falling behind or failing the module due to the extended period of inactivity.",
+    "evidence_ids": [
+     "E15",
+     "E6",
+     "E8"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Contact the student immediately to check on their well-being and understanding of the module content.",
+    "rationale": "The student has been inactive for 44 days, which suggests a significant drop-off in engagement.",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "action": "Review the student's initial engagement patterns to determine if the lack of activity is consistent with their behavior throughout the course or a recent change.",
+    "rationale": "The student has only one distinct day of activity recorded up to week 4, but the total number of clicks or days is not provided for the entire course duration, making it impossible to distinguish between a new pattern and a consistent pattern.",
+    "evidence_ids": [
+     "E2"
+    ]
+   },
+   {
+    "action": "Provide a gentle reminder or a supportive message encouraging the student to resume their studies.",
+    "rationale": "The student has not completed any quizzes or engaged with the VLE in weeks 3 and 4, which may indicate they have missed important deadlines or content.",
+    "evidence_ids": [
+     "E6",
+     "E8",
+     "E11"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The data does not include information about the student's performance on assessments or their prior engagement levels, which would help determine if this inactivity is a new issue or a consistent pattern.",
+   "The data does not specify the total number of weeks in the module, which limits the ability to assess the severity of the inactivity relative to the course timeline."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 476,
+  "completion_tokens": 563,
+  "total_tokens": 1039,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 21.39,
+ "model": "qwen/qwen3.5-9b"
+}

@@ -1,0 +1,212 @@
+{
+ "enrolment_id": "EEE_2014J_1895288",
+ "condition": "C6_full_evidence",
+ "context_ids": [
+  "E1",
+  "E2",
+  "E3",
+  "E4",
+  "E5",
+  "E6",
+  "E7",
+  "E8",
+  "E9",
+  "E10",
+  "E11",
+  "E12",
+  "E13",
+  "E14",
+  "E15",
+  "E16",
+  "E17",
+  "E18",
+  "E19",
+  "E20",
+  "E21",
+  "E22",
+  "E23",
+  "E24",
+  "E25",
+  "E26",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 1895288, module EEE, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - STUDENT EVIDENCE (all observed learning analytics data for this student):\n[E1] Total VLE clicks from registration up to the end of week 4: 471\n[E2] Number of distinct days with VLE activity up to the end of week 4: 24\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 18\n[E4] VLE clicks before the module start (day < 0): 127\n[E5] VLE clicks in weeks 1-2 (days 0-13): 107\n[E6] VLE clicks in weeks 3-4 (days 14-27): 237\n[E7] VLE clicks in week 4 (days 21-27): 82\n[E8] Days with VLE activity in weeks 3-4 (out of 14): 12\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 204\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 101\n[E11] Clicks on quizzes up to the end of week 4: 70\n[E12] Clicks on the module homepage up to the end of week 4: 71\n[E13] Clicks on resources/URLs/subpages up to the end of week 4: 15\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +0.38\n[E15] Days between the last VLE activity and the end of week 4: 0\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 1.45\n[E17] Number of assessments (TMA/CMA) with a deadline before the end of week 4: 0\n[E18] Number of those assessments submitted before the end of week 4: 0\n[E19] Submission rate of assessments due before the end of week 4: Not applicable: no assessment had a deadline before the end of week 4\n[E20] Total assessment submissions (any deadline) before the end of week 4: 0\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: No score available: no assessment was submitted (and scored) before the end of week 4\n[E22] Assessments submitted after their deadline (before the end of week 4): 0\n[E23] Has an assessment result transferred (banked) from a previous presentation: no\n[E24] Number of previous attempts at this module: 0\n[E25] Total credits of modules being studied in this presentation: 60\n[E26] Highest education level on entry: A Level or Equivalent\n[E27] Registration day relative to module start (negative = days before start): -42\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "google/gemma-4-e4b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has accessed various VLE materials, including course content pages (204 clicks), discussion forums (101 clicks), and quizzes (70 clicks) up to the end of week 4.\", \"evidence_ids\": [\"E9\", \"E10\", \"E11\"]}, {\"statement\": \"The total VLE clicks up to the end of week 4 is 471, occurring over 24 distinct days.\", \"evidence_ids\": [\"E1\", \"E2\"]}, {\"statement\": \"The activity in weeks 3-4 (237 clicks) was higher than the activity in weeks 1-2 (107 clicks), as indicated by the Activity Trend Index of +0.38.\", \"evidence_ids\": [\"E6\", \"E14\"]}, {\"statement\": \"The student's total clicks are 1.45 times the median for this cohort.\", \"evidence_ids\": [\"E16\"]}, {\"statement\": \"No assessments were due before the end of week 4, and consequently, there are no submission records or scores to report for this period.\", \"evidence_ids\": [\"E17\", \"E19\", \"E20\", \"E21\"]}], \"model_inferences\": [{\"statement\": \"The student has been actively engaged with the module content, showing a higher volume of activity in the later weeks compared to the initial weeks.\", \"evidence_ids\": [\"E14\", \"E6\"]}], \"recommendations\": [{\"action\": \"Monitor engagement patterns.\", \"rationale\": \"The student's activity volume has increased in the later weeks of the module presentation, suggesting sustained engagement with the material.\", \"evidence_ids\": [\"E14\"]}], \"evidence_limitations\": [\"The provided data does not include information regarding the specific topics or skills being addressed in the content pages, forums, or quizzes.\"], \"decision_support_type\": \"Monitoring\"}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has accessed various VLE materials, including course content pages (204 clicks), discussion forums (101 clicks), and quizzes (70 clicks) up to the end of week 4.",
+    "evidence_ids": [
+     "E9",
+     "E10",
+     "E11"
+    ]
+   },
+   {
+    "statement": "The total VLE clicks up to the end of week 4 is 471, occurring over 24 distinct days.",
+    "evidence_ids": [
+     "E1",
+     "E2"
+    ]
+   },
+   {
+    "statement": "The activity in weeks 3-4 (237 clicks) was higher than the activity in weeks 1-2 (107 clicks), as indicated by the Activity Trend Index of +0.38.",
+    "evidence_ids": [
+     "E6",
+     "E14"
+    ]
+   },
+   {
+    "statement": "The student's total clicks are 1.45 times the median for this cohort.",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "No assessments were due before the end of week 4, and consequently, there are no submission records or scores to report for this period.",
+    "evidence_ids": [
+     "E17",
+     "E19",
+     "E20",
+     "E21"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The student has been actively engaged with the module content, showing a higher volume of activity in the later weeks compared to the initial weeks.",
+    "evidence_ids": [
+     "E14",
+     "E6"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor engagement patterns.",
+    "rationale": "The student's activity volume has increased in the later weeks of the module presentation, suggesting sustained engagement with the material.",
+    "evidence_ids": [
+     "E14"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The provided data does not include information regarding the specific topics or skills being addressed in the content pages, forums, or quizzes."
+  ],
+  "decision_support_type": "Monitoring"
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 1087,
+  "completion_tokens": 417,
+  "total_tokens": 1504,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 18.88,
+ "model": "google/gemma-4-e4b"
+}

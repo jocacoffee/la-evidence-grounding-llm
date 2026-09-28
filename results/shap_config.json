@@ -1,0 +1,8 @@
+{
+  "base_value_risk": 0.4850612588971854,
+  "max_additivity_error": 2.220446049250313e-16,
+  "n_explained": 9214,
+  "background_size": 200,
+  "explainer": "PermutationExplainer (interventional)",
+  "target": "P(Fail)+P(Withdrawn)"
+}

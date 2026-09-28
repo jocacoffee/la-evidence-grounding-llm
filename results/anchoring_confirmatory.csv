@@ -1,0 +1,4 @@
+hypothesis,group,measure,expected,n_pairs,excluded,C2_share,C4_share,only_C2,only_C4,p_exact_mcnemar,p_holm,direction_as_expected
+H1 (primary),missed_at_risk,outreach,C4 < C2,39,1,0.28205128205128205,0.10256410256410256,8,1,0.0390625,0.0390625,True
+H2,missed_at_risk,states_low_risk,C4 > C2,39,1,0.23076923076923078,0.5641025641025641,5,18,0.010622024536132812,0.021244049072265625,True
+H3,false_alarm,states_high_risk,C4 > C2,40,0,0.325,0.55,3,12,0.03515625,0.03515625,True

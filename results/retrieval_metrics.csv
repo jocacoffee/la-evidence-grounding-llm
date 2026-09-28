@@ -1,0 +1,13 @@
+method,rel_k,k,precision_at_k,recall_at_k,mrr,n_queries,relevance_definition,integrity_same_enrolment_and_cutoff
+fixed_order,3,3,0.014868678098545692,0.014868678098545692,0.08290955038060416,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+fixed_order,3,5,0.009029737356197092,0.015049562260328485,0.08290955038060416,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+fixed_order,5,3,0.13403516388105058,0.08042109832863034,0.24699680026228718,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+fixed_order,5,5,0.08478402431083135,0.08478402431083135,0.24699680026228718,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+random,3,3,0.11062513566312134,0.11062513566312134,0.2863820112833785,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+random,3,5,0.11114608204905578,0.18524347008175962,0.2874318051873313,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+random,5,3,0.18506801244483032,0.1110408074668982,0.3928190563072872,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+random,5,5,0.18594313001953547,0.18594313001953547,0.39428492763960354,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+salience,3,3,0.19991317560234426,0.19991317560234426,0.46386473083982044,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+salience,3,5,0.17640546993705233,0.2940091165617539,0.46386473083982044,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+salience,5,3,0.3255553143766732,0.19533318862600393,0.6044103573714045,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0
+salience,5,5,0.27920555676145,0.27920555676145,0.6044103573714045,9214,proxy: SHAP top-rel_k features of the enrolment (model-defined),1.0

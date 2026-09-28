@@ -1,0 +1,227 @@
+{
+ "enrolment_id": "DDD_2014J_408344",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E3",
+  "E5",
+  "E12",
+  "E13",
+  "E14",
+  "E16",
+  "E19",
+  "E21"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 408344, module DDD, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 91% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: submission_rate (value 0%, see E19) increases predicted risk by 17.3 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 0.15, see E16) increases predicted risk by 14.8 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: mean_score (value not available, see E21) increases predicted risk by 5.9 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 3\n[E5] VLE clicks in weeks 1-2 (days 0-13): 0\n[E12] Clicks on the module homepage up to the end of week 4: 5\n[E13] Clicks on resources/URLs/subpages up to the end of week 4: 0\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +1.00\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.15\n[E19] Submission rate of assessments due before the end of week 4: 0%\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: No score available: no assessment was submitted (and scored) before the end of week 4\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has submitted 0% of assessments due before the end of week 4.\", \"evidence_ids\": [\"E19\", \"E21\"]}, {\"statement\": \"The student has accessed only 3 distinct VLE materials up to the end of week 4.\", \"evidence_ids\": [\"E3\"]}, {\"statement\": \"The student has recorded 0 clicks on resources/URLs/subpages up to the end of week 4.\", \"evidence_ids\": [\"E13\"]}, {\"statement\": \"The student's total clicks are 0.15 times the cohort median.\", \"evidence_ids\": [\"E16\"]}, {\"statement\": \"All recorded activity occurred in weeks 1-2, with no activity in weeks 3-4.\", \"evidence_ids\": [\"E5\", \"E14\"]}], \"model_inferences\": [{\"statement\": \"The model estimates a 91% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"The model attributes the highest risk increase to a 0% submission rate (17.3 percentage points).\", \"evidence_ids\": [\"X1\", \"E19\"]}, {\"statement\": \"The model attributes the second-highest risk increase to low engagement relative to the cohort (0.15 clicks vs median, 14.8 percentage points).\", \"evidence_ids\": [\"X2\", \"E16\"]}], \"recommendations\": [{\"action\": \"Prioritize immediate intervention regarding assessment submissions.\", \"rationale\": \"Evidence shows 0% submission of assessments due by week 4 (E19, E21). The predictive model identifies submission rate as the primary driver of risk (X1).\", \"evidence_ids\": [\"E19\", \"E21\", \"X1\", \"M1\"]}, {\"action\": \"Encourage engagement with resource materials to improve activity levels.\", \"rationale\": \"The student has accessed only 3 materials (E3) and has 0 clicks on subpages (E13), resulting in engagement at 15% of the cohort median (E16). The model associates this low engagement with increased risk (X2).\", \"evidence_ids\": [\"E3\", \"E13\", \"E16\", \"X2\"]}, {\"action\": \"Address the lack of recent activity.\", \"rationale\": \"All recorded activity is concentrated in weeks 1-2 (E5, E14), indicating a complete cessation of engagement in weeks 3-4.\", \"evidence_ids\": [\"E5\", \"E14\"]}], \"evidence_limitations\": [\"The mean score (E21) is not available because no assessments have been submitted, limiting the ability to assess academic performance quality at this stage.\", \"The model's high risk prediction (M1) is based on associations with current data points (submission rate, click volume) rather than confirmed future outcomes.\", \"The activity trend index (E14) shows a spike in early weeks followed by zero activity, which may indicate a drop-off rather than a sustained high-engagement period.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has submitted 0% of assessments due before the end of week 4.",
+    "evidence_ids": [
+     "E19",
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has accessed only 3 distinct VLE materials up to the end of week 4.",
+    "evidence_ids": [
+     "E3"
+    ]
+   },
+   {
+    "statement": "The student has recorded 0 clicks on resources/URLs/subpages up to the end of week 4.",
+    "evidence_ids": [
+     "E13"
+    ]
+   },
+   {
+    "statement": "The student's total clicks are 0.15 times the cohort median.",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "All recorded activity occurred in weeks 1-2, with no activity in weeks 3-4.",
+    "evidence_ids": [
+     "E5",
+     "E14"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 91% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The model attributes the highest risk increase to a 0% submission rate (17.3 percentage points).",
+    "evidence_ids": [
+     "X1",
+     "E19"
+    ]
+   },
+   {
+    "statement": "The model attributes the second-highest risk increase to low engagement relative to the cohort (0.15 clicks vs median, 14.8 percentage points).",
+    "evidence_ids": [
+     "X2",
+     "E16"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Prioritize immediate intervention regarding assessment submissions.",
+    "rationale": "Evidence shows 0% submission of assessments due by week 4 (E19, E21). The predictive model identifies submission rate as the primary driver of risk (X1).",
+    "evidence_ids": [
+     "E19",
+     "E21",
+     "X1",
+     "M1"
+    ]
+   },
+   {
+    "action": "Encourage engagement with resource materials to improve activity levels.",
+    "rationale": "The student has accessed only 3 materials (E3) and has 0 clicks on subpages (E13), resulting in engagement at 15% of the cohort median (E16). The model associates this low engagement with increased risk (X2).",
+    "evidence_ids": [
+     "E3",
+     "E13",
+     "E16",
+     "X2"
+    ]
+   },
+   {
+    "action": "Address the lack of recent activity.",
+    "rationale": "All recorded activity is concentrated in weeks 1-2 (E5, E14), indicating a complete cessation of engagement in weeks 3-4.",
+    "evidence_ids": [
+     "E5",
+     "E14"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The mean score (E21) is not available because no assessments have been submitted, limiting the ability to assess academic performance quality at this stage.",
+   "The model's high risk prediction (M1) is based on associations with current data points (submission rate, click volume) rather than confirmed future outcomes.",
+   "The activity trend index (E14) shows a spike in early weeks followed by zero activity, which may indicate a drop-off rather than a sustained high-engagement period."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 847,
+  "completion_tokens": 675,
+  "total_tokens": 1522,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 29.75,
+ "model": "qwen/qwen3.5-9b"
+}

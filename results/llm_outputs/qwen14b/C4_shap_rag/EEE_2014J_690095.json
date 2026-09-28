@@ -1,0 +1,231 @@
+{
+ "enrolment_id": "EEE_2014J_690095",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E4",
+  "E6",
+  "E11",
+  "E17",
+  "E19",
+  "E26",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 690095, module EEE, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 44% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: highest_education (value Lower Than A Level, see E26) increases predicted risk by 7.5 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: n_assessments_due (value 0, see E17) decreases predicted risk by 6.8 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: submission_rate (value not available, see E19) decreases predicted risk by 4.1 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E4] VLE clicks before the module start (day < 0): 0\n[E6] VLE clicks in weeks 3-4 (days 14-27): 277\n[E11] Clicks on quizzes up to the end of week 4: 69\n[E17] Number of assessments (TMA/CMA) with a deadline before the end of week 4: 0\n[E19] Submission rate of assessments due before the end of week 4: Not applicable: no assessment had a deadline before the end of week 4\n[E26] Highest education level on entry: Lower Than A Level\n[E27] Registration day relative to module start (negative = days before start): -23\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{ \"observed_facts\": [ { \"statement\": \"The student has no assessments due before the end of week 4 (E17).\", \"evidence_ids\": [\"E17\"] }, { \"statement\": \"The student's highest education level on entry is Lower Than A Level (E26).\", \"evidence_ids\": [\"E26\"] }, { \"statement\": \"The student clicked on quizzes 69 times up to the end of week 4 (E11).\", \"evidence_ids\": [\"E11\"] }, { \"statement\": \"The student clicked 277 times on the VLE in weeks 3-4 (E6).\", \"evidence_ids\": [\"E6\"] }, { \"statement\": \"The student registered 23 days before the module started (E27).\", \"evidence_ids\": [\"E27\"] }, { \"statement\": \"The student's submission rate is not applicable, as no assessments were due before the end of week 4 (E19).\", \"evidence_ids\": [\"E19\"] } ], \"model_inferences\": [ { \"statement\": \"The model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).\", \"evidence_ids\": [\"M1\"] }, { \"statement\": \"The student's highest education level (Lower Than A Level) is associated with an increase in the predicted risk of an unsuccessful outcome by 7.5 percentage points (X1).\", \"evidence_ids\": [\"X1\"] }, { \"statement\": \"The student having no assessments due before the end of week 4 is associated with a decrease in predicted risk by 6.8 percentage points (X2).\", \"evidence_ids\": [\"X2\"] }, { \"statement\": \"The student's submission rate (not applicable) is associated with a decrease in predicted risk by 4.1 percentage points (X3).\", \"evidence_ids\": [\"X3\"] } ], \"recommendations\": [ { \"action\": \"Monitor the student's engagement with assessments once they become available, as their submission rate may impact predicted risk (X3).\", \"rationale\": \"The model suggests that submission rates are associated with predicted risk, but no assessments were due in the first four weeks.\" , \"evidence_ids\": [\"X3\", \"E19\"] }, { \"action\": \"Encourage the student to engage with assessments once they become available, as no assessments were due in the first four weeks (E17).\", \"rationale\": \"The student has no assessments due in the first four weeks, so their engagement with assessments may be a new area to focus on.\", \"evidence_ids\": [\"E17\"] }, { \"action\": \"Consider providing additional academic support, as the student's highest education level is associated with an increased predicted risk (X1).\", \"rationale\": \"The student's highest education level is associated with a higher predicted risk of an unsuccessful outcome, which may indicate the need for targeted support.\", \"evidence_ids\": [\"X1\", \"E26\"] } ], \"evidence_limitations\": [ \"The model's prediction of a 44% probability of an unsuccessful outcome is based on associations, not causality (M1).\", \"The student's submission rate has no effect on predicted risk because no assessments were due in the first four weeks (E19).\", \"The student's engagement with quizzes and VLE is positive, but it does not directly correlate with predicted risk (E6, E11).\", \"The student's registration day does not have a direct association with predicted risk (E27).\", \"The model's SHAP values are based on associations, not causes (X1, X2, X3).\" ] }",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has no assessments due before the end of week 4 (E17).",
+    "evidence_ids": [
+     "E17"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry is Lower Than A Level (E26).",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The student clicked on quizzes 69 times up to the end of week 4 (E11).",
+    "evidence_ids": [
+     "E11"
+    ]
+   },
+   {
+    "statement": "The student clicked 277 times on the VLE in weeks 3-4 (E6).",
+    "evidence_ids": [
+     "E6"
+    ]
+   },
+   {
+    "statement": "The student registered 23 days before the module started (E27).",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The student's submission rate is not applicable, as no assessments were due before the end of week 4 (E19).",
+    "evidence_ids": [
+     "E19"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The student's highest education level (Lower Than A Level) is associated with an increase in the predicted risk of an unsuccessful outcome by 7.5 percentage points (X1).",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "The student having no assessments due before the end of week 4 is associated with a decrease in predicted risk by 6.8 percentage points (X2).",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "The student's submission rate (not applicable) is associated with a decrease in predicted risk by 4.1 percentage points (X3).",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor the student's engagement with assessments once they become available, as their submission rate may impact predicted risk (X3).",
+    "rationale": "The model suggests that submission rates are associated with predicted risk, but no assessments were due in the first four weeks.",
+    "evidence_ids": [
+     "X3",
+     "E19"
+    ]
+   },
+   {
+    "action": "Encourage the student to engage with assessments once they become available, as no assessments were due in the first four weeks (E17).",
+    "rationale": "The student has no assessments due in the first four weeks, so their engagement with assessments may be a new area to focus on.",
+    "evidence_ids": [
+     "E17"
+    ]
+   },
+   {
+    "action": "Consider providing additional academic support, as the student's highest education level is associated with an increased predicted risk (X1).",
+    "rationale": "The student's highest education level is associated with a higher predicted risk of an unsuccessful outcome, which may indicate the need for targeted support.",
+    "evidence_ids": [
+     "X1",
+     "E26"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of a 44% probability of an unsuccessful outcome is based on associations, not causality (M1).",
+   "The student's submission rate has no effect on predicted risk because no assessments were due in the first four weeks (E19).",
+   "The student's engagement with quizzes and VLE is positive, but it does not directly correlate with predicted risk (E6, E11).",
+   "The student's registration day does not have a direct association with predicted risk (E27).",
+   "The model's SHAP values are based on associations, not causes (X1, X2, X3)."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 715,
+  "completion_tokens": 805,
+  "total_tokens": 1520,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 61.1,
+ "model": "qwen/qwen3-14b"
+}

@@ -1,0 +1,7 @@
+condition,evaluator_supported,population
+C2_student_data,False,56
+C2_student_data,True,1014
+C3_rag,False,55
+C3_rag,True,833
+C4_shap_rag,False,16
+C4_shap_rag,True,1174

@@ -1,0 +1,21 @@
+{
+  "raw_dir": "../open+university+learning+analytics+dataset",
+  "cutoff_day": 28,
+  "cutoff_week": 4,
+  "seed": 42,
+  "train_presentations": ["2013B", "2013J", "2014B"],
+  "validation_presentation": "2014B",
+  "test_presentations": ["2014J"],
+  "classes": ["Distinction", "Pass", "Fail", "Withdrawn"],
+  "risk_classes": ["Fail", "Withdrawn"],
+  "shap_top_k": 5,
+  "llm": {
+    "base_url": "http://localhost:1234/v1",
+    "model": "qwen/qwen3.5-9b",
+    "temperature": 0.0,
+    "seed": 42,
+    "max_tokens": 1500
+  },
+  "llm_sample_size": 100,
+  "retrieval_k": 5
+}

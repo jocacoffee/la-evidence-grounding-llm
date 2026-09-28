@@ -1,0 +1,227 @@
+{
+ "enrolment_id": "EEE_2014J_540219",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E6",
+  "E10",
+  "E11",
+  "E14",
+  "E17",
+  "E19",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 540219, module EEE, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 44% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: n_assessments_due (value 0, see E17) decreases predicted risk by 5.0 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_quiz (value 118, see E11) increases predicted risk by 4.2 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: submission_rate (value not available, see E19) decreases predicted risk by 4.1 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E6] VLE clicks in weeks 3-4 (days 14-27): 76\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 0\n[E11] Clicks on quizzes up to the end of week 4: 118\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): -0.41\n[E17] Number of assessments (TMA/CMA) with a deadline before the end of week 4: 0\n[E19] Submission rate of assessments due before the end of week 4: Not applicable: no assessment had a deadline before the end of week 4\n[E27] Registration day relative to module start (negative = days before start): -23\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{ \"observed_facts\": [ { \"statement\": \"The student has zero assessments due before the end of week 4 (E17).\", \"evidence_ids\": [\"E17\"] }, { \"statement\": \"The student has clicked on quizzes 118 times up to the end of week 4 (E11).\", \"evidence_ids\": [\"E11\"] }, { \"statement\": \"The student has not clicked on discussion forums (forumng) up to the end of week 4 (E10).\", \"evidence_ids\": [\"E10\"] }, { \"statement\": \"The student's activity trend index is -0.41, indicating more activity in weeks 1-2 than in weeks 3-4 (E14).\", \"evidence_ids\": [\"E14\"] }, { \"statement\": \"The student registered 23 days before the module started (E27).\", \"evidence_ids\": [\"E27\"] }, { \"statement\": \"The student has clicked on the VLE 76 times in weeks 3-4 (E6).\", \"evidence_ids\": [\"E6\"] } ], \"model_inferences\": [ { \"statement\": \"The model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).\", \"evidence_ids\": [\"M1\"] }, { \"statement\": \"The number of assessments due (n_assessments_due) is associated with a decrease in the predicted risk by 5.0 percentage points (X1).\", \"evidence_ids\": [\"X1\"] }, { \"statement\": \"The number of quiz clicks is associated with an increase in the predicted risk by 4.2 percentage points (X2).\", \"evidence_ids\": [\"X2\"] }, { \"statement\": \"The submission rate is associated with a decrease in the predicted risk by 4.1 percentage points (X3).\", \"evidence_ids\": [\"X3\"] } ], \"recommendations\": [ { \"action\": \"Encourage the student to engage more with discussion forums, as there is no recorded activity in this area (E10).\", \"rationale\": \"Lack of forum engagement may indicate limited interaction with peers or instructors, which could impact learning outcomes.\" , \"evidence_ids\": [\"E10\"] }, { \"action\": \"Monitor the student's quiz engagement, as high quiz clicks are associated with an increased risk of unsuccessful outcomes (X2).\", \"rationale\": \"While quiz activity is a positive sign, it may indicate focused preparation rather than broader engagement with the module content.\" , \"evidence_ids\": [\"X2\", \"E11\"] }, { \"action\": \"Provide support for the student to improve their activity trend, as it is currently negative (-0.41), indicating a decline in engagement from weeks 1-2 to weeks 3-4 (E14).\", \"rationale\": \"A declining activity trend may suggest a need for intervention to re-engage the student with module content.\" , \"evidence_ids\": [\"E14\"] } ], \"evidence_limitations\": [ \"The submission rate is not applicable for this student, as no assessments were due before the end of week 4 (E19).\", \"The model's prediction of an unsuccessful outcome is probabilistic and not deterministic (M1).\" ] }",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has zero assessments due before the end of week 4 (E17).",
+    "evidence_ids": [
+     "E17"
+    ]
+   },
+   {
+    "statement": "The student has clicked on quizzes 118 times up to the end of week 4 (E11).",
+    "evidence_ids": [
+     "E11"
+    ]
+   },
+   {
+    "statement": "The student has not clicked on discussion forums (forumng) up to the end of week 4 (E10).",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's activity trend index is -0.41, indicating more activity in weeks 1-2 than in weeks 3-4 (E14).",
+    "evidence_ids": [
+     "E14"
+    ]
+   },
+   {
+    "statement": "The student registered 23 days before the module started (E27).",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The student has clicked on the VLE 76 times in weeks 3-4 (E6).",
+    "evidence_ids": [
+     "E6"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The number of assessments due (n_assessments_due) is associated with a decrease in the predicted risk by 5.0 percentage points (X1).",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "The number of quiz clicks is associated with an increase in the predicted risk by 4.2 percentage points (X2).",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "The submission rate is associated with a decrease in the predicted risk by 4.1 percentage points (X3).",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Encourage the student to engage more with discussion forums, as there is no recorded activity in this area (E10).",
+    "rationale": "Lack of forum engagement may indicate limited interaction with peers or instructors, which could impact learning outcomes.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "action": "Monitor the student's quiz engagement, as high quiz clicks are associated with an increased risk of unsuccessful outcomes (X2).",
+    "rationale": "While quiz activity is a positive sign, it may indicate focused preparation rather than broader engagement with the module content.",
+    "evidence_ids": [
+     "X2",
+     "E11"
+    ]
+   },
+   {
+    "action": "Provide support for the student to improve their activity trend, as it is currently negative (-0.41), indicating a decline in engagement from weeks 1-2 to weeks 3-4 (E14).",
+    "rationale": "A declining activity trend may suggest a need for intervention to re-engage the student with module content.",
+    "evidence_ids": [
+     "E14"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The submission rate is not applicable for this student, as no assessments were due before the end of week 4 (E19).",
+   "The model's prediction of an unsuccessful outcome is probabilistic and not deterministic (M1)."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 786,
+  "completion_tokens": 721,
+  "total_tokens": 1507,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 56.65,
+ "model": "qwen/qwen3-14b"
+}

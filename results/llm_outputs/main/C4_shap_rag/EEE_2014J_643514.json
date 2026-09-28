@@ -1,0 +1,222 @@
+{
+ "enrolment_id": "EEE_2014J_643514",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E5",
+  "E10",
+  "E11",
+  "E16",
+  "E20",
+  "E21",
+  "E25",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 643514, module EEE, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 16% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 97, see E21) decreases predicted risk by 16.3 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 1.90, see E16) decreases predicted risk by 8.0 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 4.5 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E5] VLE clicks in weeks 1-2 (days 0-13): 273\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 165\n[E11] Clicks on quizzes up to the end of week 4: 139\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 1.90\n[E20] Total assessment submissions (any deadline) before the end of week 4: 1\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 97\n[E25] Total credits of modules being studied in this presentation: 90\n[E26] Highest education level on entry: A Level or Equivalent\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has submitted only 1 assessment before the end of week 4.\", \"evidence_ids\": [\"E20\"]}, {\"statement\": \"The mean score of the submitted assessment is 97.\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student's total clicks relative to the cohort median is 1.90.\", \"evidence_ids\": [\"E16\"]}, {\"statement\": \"The student's highest education level on entry is A Level or Equivalent.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The model estimates a 16% probability of an unsuccessful outcome.\", \"evidence_ids\": [\"M1\"]}], \"model_inferences\": [{\"statement\": \"High mean scores (97) are associated with a lower predicted risk of failure.\", \"evidence_ids\": [\"X1\", \"E21\"]}, {\"statement\": \"Click activity significantly above the cohort median (1.90) is associated with a lower predicted risk of failure.\", \"evidence_ids\": [\"X2\", \"E16\"]}, {\"statement\": \"Higher education levels (A Level or Equivalent) are associated with a lower predicted risk of failure.\", \"evidence_ids\": [\"X3\", \"E26\"]}], \"recommendations\": [{\"action\": \"Monitor assessment submission patterns closely.\", \"rationale\": \"The student has only submitted 1 assessment by the end of week 4 (E20). While the current score is high (E21), ensuring timely submission of all required assessments is critical to maintaining the low predicted risk of an unsuccessful outcome (M1).\", \"evidence_ids\": [\"E20\", \"M1\"]}, {\"action\": \"Maintain current engagement levels.\", \"rationale\": \"The student's click activity is nearly double the cohort median (E16), which is associated with a reduced risk of failure (X2). Continue to encourage this level of interaction with the VLE and discussion forums.\", \"evidence_ids\": [\"E16\", \"X2\"]}, {\"action\": \"Provide early intervention if submission delays occur.\", \"rationale\": \"Given that only one assessment has been submitted by week 4, the student may face time pressure or logistical issues with upcoming deadlines. Proactive support can help prevent a drop in performance or engagement that might increase the risk of failure.\", \"evidence_ids\": [\"E20\", \"M1\"]}], \"evidence_limitations\": [\"The data is limited to the end of week 4; long-term trends in assessment performance and engagement are not yet visible.\", \"The model's prediction of a 16% failure risk (M1) is based on associations with current data and should be viewed as a probability, not a certainty.\", \"Specific reasons for the low number of submissions (e.g., technical issues, personal circumstances) are not available in the provided data.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has submitted only 1 assessment before the end of week 4.",
+    "evidence_ids": [
+     "E20"
+    ]
+   },
+   {
+    "statement": "The mean score of the submitted assessment is 97.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student's total clicks relative to the cohort median is 1.90.",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry is A Level or Equivalent.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The model estimates a 16% probability of an unsuccessful outcome.",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "High mean scores (97) are associated with a lower predicted risk of failure.",
+    "evidence_ids": [
+     "X1",
+     "E21"
+    ]
+   },
+   {
+    "statement": "Click activity significantly above the cohort median (1.90) is associated with a lower predicted risk of failure.",
+    "evidence_ids": [
+     "X2",
+     "E16"
+    ]
+   },
+   {
+    "statement": "Higher education levels (A Level or Equivalent) are associated with a lower predicted risk of failure.",
+    "evidence_ids": [
+     "X3",
+     "E26"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor assessment submission patterns closely.",
+    "rationale": "The student has only submitted 1 assessment by the end of week 4 (E20). While the current score is high (E21), ensuring timely submission of all required assessments is critical to maintaining the low predicted risk of an unsuccessful outcome (M1).",
+    "evidence_ids": [
+     "E20",
+     "M1"
+    ]
+   },
+   {
+    "action": "Maintain current engagement levels.",
+    "rationale": "The student's click activity is nearly double the cohort median (E16), which is associated with a reduced risk of failure (X2). Continue to encourage this level of interaction with the VLE and discussion forums.",
+    "evidence_ids": [
+     "E16",
+     "X2"
+    ]
+   },
+   {
+    "action": "Provide early intervention if submission delays occur.",
+    "rationale": "Given that only one assessment has been submitted by week 4, the student may face time pressure or logistical issues with upcoming deadlines. Proactive support can help prevent a drop in performance or engagement that might increase the risk of failure.",
+    "evidence_ids": [
+     "E20",
+     "M1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The data is limited to the end of week 4; long-term trends in assessment performance and engagement are not yet visible.",
+   "The model's prediction of a 16% failure risk (M1) is based on associations with current data and should be viewed as a probability, not a certainty.",
+   "Specific reasons for the low number of submissions (e.g., technical issues, personal circumstances) are not available in the provided data."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 769,
+  "completion_tokens": 612,
+  "total_tokens": 1381,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 24.72,
+ "model": "qwen/qwen3.5-9b"
+}

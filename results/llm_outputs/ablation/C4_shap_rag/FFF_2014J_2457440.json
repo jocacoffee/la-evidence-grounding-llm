@@ -1,0 +1,220 @@
+{
+ "enrolment_id": "FFF_2014J_2457440",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E9",
+  "E10",
+  "E16",
+  "E18",
+  "E19",
+  "E21",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 2457440, module FFF, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 68% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: submission_rate (value 0%, see E19) increases predicted risk by 16.4 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 0.42, see E16) increases predicted risk by 10.9 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: mean_score (value 82, see E21) decreases predicted risk by 6.9 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 19\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 2\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.42\n[E18] Number of those assessments submitted before the end of week 4: 0\n[E19] Submission rate of assessments due before the end of week 4: 0%\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 82\n[E27] Registration day relative to module start (negative = days before start): -22\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has submitted 0% of assessments due before the end of week 4.\", \"evidence_ids\": [\"E18\", \"E19\"]}, {\"statement\": \"The student's click activity (19 content clicks, 2 forum clicks) is 42% of the cohort median.\", \"evidence_ids\": [\"E9\", \"E10\", \"E16\"]}, {\"statement\": \"The student registered 22 days before the module start.\", \"evidence_ids\": [\"E27\"]}, {\"statement\": \"The model estimates a 68% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"model_inferences\": [{\"statement\": \"The model attributes the high risk primarily to the lack of assessment submissions (contributing +16.4 percentage points to risk).\", \"evidence_ids\": [\"X1\", \"E19\"]}, {\"statement\": \"The model attributes secondary risk to low engagement relative to peers (contributing +10.9 percentage points to risk).\", \"evidence_ids\": [\"X2\", \"E16\"]}, {\"statement\": \"The model notes that the single submitted assessment score of 82 mitigates risk slightly (contributing -6.9 percentage points to risk).\", \"evidence_ids\": [\"X3\", \"E21\"]}], \"recommendations\": [{\"action\": \"Prioritize immediate intervention on assessment submission.\", \"rationale\": \"Evidence indicates the student has submitted zero assessments by week 4, which the model identifies as the strongest predictor of risk.\", \"evidence_ids\": [\"X1\", \"E18\", \"E19\"]}, {\"action\": \"Encourage increased interaction with course content and discussion forums.\", \"rationale\": \"The student's click activity is significantly below the cohort median, a factor associated with increased risk in the model.\", \"evidence_ids\": [\"X2\", \"E16\", \"E9\", \"E10\"]}, {\"action\": \"Leverage the student's early registration as a potential entry point for support.\", \"rationale\": \"The student registered 22 days prior to the start, suggesting they are aware of the timeline; use this to reinforce the importance of the upcoming deadlines.\", \"evidence_ids\": [\"E27\"]}], \"evidence_limitations\": [\"The data covers only the first 4 weeks of the module; long-term trends and performance in later weeks are unknown.\", \"The model's risk prediction is based on associations with current data and should not be interpreted as a certain outcome.\", \"The single submitted assessment score (82) is based on only one data point, which may not reflect the student's true capability across all assessments.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has submitted 0% of assessments due before the end of week 4.",
+    "evidence_ids": [
+     "E18",
+     "E19"
+    ]
+   },
+   {
+    "statement": "The student's click activity (19 content clicks, 2 forum clicks) is 42% of the cohort median.",
+    "evidence_ids": [
+     "E9",
+     "E10",
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student registered 22 days before the module start.",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The model estimates a 68% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model attributes the high risk primarily to the lack of assessment submissions (contributing +16.4 percentage points to risk).",
+    "evidence_ids": [
+     "X1",
+     "E19"
+    ]
+   },
+   {
+    "statement": "The model attributes secondary risk to low engagement relative to peers (contributing +10.9 percentage points to risk).",
+    "evidence_ids": [
+     "X2",
+     "E16"
+    ]
+   },
+   {
+    "statement": "The model notes that the single submitted assessment score of 82 mitigates risk slightly (contributing -6.9 percentage points to risk).",
+    "evidence_ids": [
+     "X3",
+     "E21"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Prioritize immediate intervention on assessment submission.",
+    "rationale": "Evidence indicates the student has submitted zero assessments by week 4, which the model identifies as the strongest predictor of risk.",
+    "evidence_ids": [
+     "X1",
+     "E18",
+     "E19"
+    ]
+   },
+   {
+    "action": "Encourage increased interaction with course content and discussion forums.",
+    "rationale": "The student's click activity is significantly below the cohort median, a factor associated with increased risk in the model.",
+    "evidence_ids": [
+     "X2",
+     "E16",
+     "E9",
+     "E10"
+    ]
+   },
+   {
+    "action": "Leverage the student's early registration as a potential entry point for support.",
+    "rationale": "The student registered 22 days prior to the start, suggesting they are aware of the timeline; use this to reinforce the importance of the upcoming deadlines.",
+    "evidence_ids": [
+     "E27"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The data covers only the first 4 weeks of the module; long-term trends and performance in later weeks are unknown.",
+   "The model's risk prediction is based on associations with current data and should not be interpreted as a certain outcome.",
+   "The single submitted assessment score (82) is based on only one data point, which may not reflect the student's true capability across all assessments."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 752,
+  "completion_tokens": 584,
+  "total_tokens": 1336,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 24.13,
+ "model": "qwen/qwen3.5-9b"
+}

@@ -1,0 +1,227 @@
+{
+ "enrolment_id": "BBB_2014J_650961",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E6",
+  "E9",
+  "E10",
+  "E14",
+  "E16",
+  "E21",
+  "E22"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 650961, module BBB, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 92% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 1, see E21) increases predicted risk by 35.7 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 0.38, see E16) increases predicted risk by 7.4 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: clicks_weeks_3_4 (value 2, see E6) decreases predicted risk by 2.3 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E6] VLE clicks in weeks 3-4 (days 14-27): 2\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 17\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 0\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): -0.92\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 0.38\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 1\n[E22] Assessments submitted after their deadline (before the end of week 4): 1\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{ \"observed_facts\": [ { \"statement\": \"The student has a mean score of 1 on assessments submitted before the end of week 4.\", \"evidence_ids\": [\"E21\"] }, { \"statement\": \"The student has a total clicks relative to the median of the same module-presentation cohort of 0.38.\", \"evidence_ids\": [\"E16\"] }, { \"statement\": \"The student has 2 VLE clicks in weeks 3-4 (days 14-27).\", \"evidence_ids\": [\"E6\"] }, { \"statement\": \"The student has 17 clicks on course content pages up to the end of week 4.\", \"evidence_ids\": [\"E9\"] }, { \"statement\": \"The student has 0 clicks on discussion forums up to the end of week 4.\", \"evidence_ids\": [\"E10\"] }, { \"statement\": \"The student's activity trend index is -0.92, indicating most of their activity occurred in weeks 1-2.\", \"evidence_ids\": [\"E14\"] } ], \"model_inferences\": [ { \"statement\": \"The model-estimated probability of an unsuccessful outcome (Fail or Withdrawn) is 92%.\", \"evidence_ids\": [\"M1\"] }, { \"statement\": \"The mean_score (value 1) increases the predicted risk of an unsuccessful outcome by 35.7 percentage points.\", \"evidence_ids\": [\"X1\"] }, { \"statement\": \"The clicks_vs_cohort_median (value 0.38) increases the predicted risk of an unsuccessful outcome by 7.4 percentage points.\", \"evidence_ids\": [\"X2\"] }, { \"statement\": \"The clicks_weeks_3_4 (value 2) decreases the predicted risk of an unsuccessful outcome by 2.3 percentage points.\", \"evidence_ids\": [\"X3\"] } ], \"recommendations\": [ { \"action\": \"Provide targeted academic support to address the low mean score (1) and improve engagement with course content.\", \"rationale\": \"The student's low mean score is strongly associated with an increased risk of an unsuccessful outcome, suggesting a need for academic intervention.\" , \"evidence_ids\": [\"X1\", \"E21\"] }, { \"action\": \"Encourage the student to increase their engagement with discussion forums, as they have not clicked on any forum pages up to the end of week 4.\", \"rationale\": \"Engagement with discussion forums may help improve academic performance and reduce the risk of an unsuccessful outcome.\", \"evidence_ids\": [\"E10\"] }, { \"action\": \"Monitor the student's activity trend, as their engagement has significantly decreased in weeks 3-4 compared to weeks 1-2.\", \"rationale\": \"A negative activity trend may indicate a lack of motivation or engagement, which could contribute to an unsuccessful outcome.\", \"evidence_ids\": [\"E14\"] } ], \"evidence_limitations\": [ \"The model's prediction of a 92% risk of an unsuccessful outcome is based on associations, not causality. It should be interpreted as a risk estimate rather than a definitive outcome.\", \"The evidence does not provide information about the student's personal circumstances, learning style, or specific challenges they may be facing.\" ] }",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has a mean score of 1 on assessments submitted before the end of week 4.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has a total clicks relative to the median of the same module-presentation cohort of 0.38.",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student has 2 VLE clicks in weeks 3-4 (days 14-27).",
+    "evidence_ids": [
+     "E6"
+    ]
+   },
+   {
+    "statement": "The student has 17 clicks on course content pages up to the end of week 4.",
+    "evidence_ids": [
+     "E9"
+    ]
+   },
+   {
+    "statement": "The student has 0 clicks on discussion forums up to the end of week 4.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's activity trend index is -0.92, indicating most of their activity occurred in weeks 1-2.",
+    "evidence_ids": [
+     "E14"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model-estimated probability of an unsuccessful outcome (Fail or Withdrawn) is 92%.",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The mean_score (value 1) increases the predicted risk of an unsuccessful outcome by 35.7 percentage points.",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "The clicks_vs_cohort_median (value 0.38) increases the predicted risk of an unsuccessful outcome by 7.4 percentage points.",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "The clicks_weeks_3_4 (value 2) decreases the predicted risk of an unsuccessful outcome by 2.3 percentage points.",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Provide targeted academic support to address the low mean score (1) and improve engagement with course content.",
+    "rationale": "The student's low mean score is strongly associated with an increased risk of an unsuccessful outcome, suggesting a need for academic intervention.",
+    "evidence_ids": [
+     "X1",
+     "E21"
+    ]
+   },
+   {
+    "action": "Encourage the student to increase their engagement with discussion forums, as they have not clicked on any forum pages up to the end of week 4.",
+    "rationale": "Engagement with discussion forums may help improve academic performance and reduce the risk of an unsuccessful outcome.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "action": "Monitor the student's activity trend, as their engagement has significantly decreased in weeks 3-4 compared to weeks 1-2.",
+    "rationale": "A negative activity trend may indicate a lack of motivation or engagement, which could contribute to an unsuccessful outcome.",
+    "evidence_ids": [
+     "E14"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of a 92% risk of an unsuccessful outcome is based on associations, not causality. It should be interpreted as a risk estimate rather than a definitive outcome.",
+   "The evidence does not provide information about the student's personal circumstances, learning style, or specific challenges they may be facing."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 793,
+  "completion_tokens": 703,
+  "total_tokens": 1496,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 60.6,
+ "model": "qwen/qwen3-14b"
+}

@@ -1,0 +1,194 @@
+{
+ "enrolment_id": "DDD_2014J_594950",
+ "condition": "C5_rag_risk",
+ "context_ids": [
+  "M1",
+  "E26",
+  "E27",
+  "E15",
+  "E9",
+  "E13"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 594950, module DDD, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 17% (model inference, not an observed fact)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E26] Highest education level on entry: HE Qualification\n[E27] Registration day relative to module start (negative = days before start): -136\n[E15] Days between the last VLE activity and the end of week 4: 0\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 13\n[E13] Clicks on resources/URLs/subpages up to the end of week 4: 29\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has a HE Qualification as their highest education level on entry.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The student registered 136 days before the module start date.\", \"evidence_ids\": [\"E27\"]}, {\"statement\": \"The student has performed no VLE activity in the 4 days leading up to the end of week 4.\", \"evidence_ids\": [\"E15\"]}, {\"statement\": \"The student has clicked on 13 course content pages and 29 resources/URLs/subpages up to the end of week 4.\", \"evidence_ids\": [\"E9\", \"E13\"]}], \"model_inferences\": [{\"statement\": \"The predictive model estimates a 17% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"recommendations\": [{\"action\": \"Monitor recent engagement closely.\", \"rationale\": \"The student shows no VLE activity in the last 4 days (E15), which may indicate a drop in engagement despite earlier resource usage.\", \"evidence_ids\": [\"E15\"]}, {\"action\": \"Consider a low-stakes check-in or reminder.\", \"rationale\": \"While the student has accessed resources (E9, E13), the cessation of activity suggests they may need a prompt to re-engage before the module concludes.\", \"evidence_ids\": [\"E9\", \"E13\", \"E15\"]}, {\"action\": \"Review the risk estimate with caution.\", \"rationale\": \"The 17% risk probability (M1) is relatively low; interventions should be supportive rather than punitive to avoid unnecessary anxiety.\", \"evidence_ids\": [\"M1\"]}], \"evidence_limitations\": [\"Insufficient data exists to determine if the student's engagement pattern is consistent with their historical performance or typical cohort behavior.\", \"No data is available regarding assignment submissions, grades, or specific content completion rates to validate the model's risk prediction or identify specific knowledge gaps.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has a HE Qualification as their highest education level on entry.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The student registered 136 days before the module start date.",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The student has performed no VLE activity in the 4 days leading up to the end of week 4.",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "statement": "The student has clicked on 13 course content pages and 29 resources/URLs/subpages up to the end of week 4.",
+    "evidence_ids": [
+     "E9",
+     "E13"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The predictive model estimates a 17% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor recent engagement closely.",
+    "rationale": "The student shows no VLE activity in the last 4 days (E15), which may indicate a drop in engagement despite earlier resource usage.",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "action": "Consider a low-stakes check-in or reminder.",
+    "rationale": "While the student has accessed resources (E9, E13), the cessation of activity suggests they may need a prompt to re-engage before the module concludes.",
+    "evidence_ids": [
+     "E9",
+     "E13",
+     "E15"
+    ]
+   },
+   {
+    "action": "Review the risk estimate with caution.",
+    "rationale": "The 17% risk probability (M1) is relatively low; interventions should be supportive rather than punitive to avoid unnecessary anxiety.",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "Insufficient data exists to determine if the student's engagement pattern is consistent with their historical performance or typical cohort behavior.",
+   "No data is available regarding assignment submissions, grades, or specific content completion rates to validate the model's risk prediction or identify specific knowledge gaps."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 522,
+  "completion_tokens": 437,
+  "total_tokens": 959,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 20.74,
+ "model": "qwen/qwen3.5-9b"
+}

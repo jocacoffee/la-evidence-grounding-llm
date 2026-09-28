@@ -1,0 +1,10 @@
+condition,kind,n,unsupported_rate
+C3_rag,fact,467,0.012847965738758016
+C3_rag,inference,207,0.13526570048309183
+C3_rag,rationale,226,0.11946902654867253
+C4_shap_rag,fact,537,0.013035381750465591
+C4_shap_rag,inference,372,0.0
+C4_shap_rag,rationale,281,0.02491103202846978
+C5_rag_risk,fact,467,0.017130620985010725
+C5_rag_risk,inference,109,0.00917431192660545
+C5_rag_risk,rationale,230,0.06956521739130439

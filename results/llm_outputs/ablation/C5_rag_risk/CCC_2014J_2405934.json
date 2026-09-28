@@ -1,0 +1,204 @@
+{
+ "enrolment_id": "CCC_2014J_2405934",
+ "condition": "C5_rag_risk",
+ "context_ids": [
+  "M1",
+  "E24",
+  "E25",
+  "E7",
+  "E6",
+  "E8"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 2405934, module CCC, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 92% (model inference, not an observed fact)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E24] Number of previous attempts at this module: 1\n[E25] Total credits of modules being studied in this presentation: 220\n[E7] VLE clicks in week 4 (days 21-27): 190\n[E6] VLE clicks in weeks 3-4 (days 14-27): 484\n[E8] Days with VLE activity in weeks 3-4 (out of 14): 12\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student is enrolled in module CCC, presentation 2014J, and is currently at the end of week 4.\", \"evidence_ids\": []}, {\"statement\": \"This is the student's first attempt at this module.\", \"evidence_ids\": [\"E24\"]}, {\"statement\": \"The student is studying 220 total credits in this presentation.\", \"evidence_ids\": [\"E25\"]}, {\"statement\": \"The student had 190 VLE clicks in week 4 (days 21-27).\", \"evidence_ids\": [\"E7\"]}, {\"statement\": \"The student had 484 VLE clicks in weeks 3-4 combined (days 14-27).\", \"evidence_ids\": [\"E6\"]}, {\"statement\": \"The student was active on the VLE on 12 out of 14 days in weeks 3-4.\", \"evidence_ids\": [\"E8\"]}], \"model_inferences\": [{\"statement\": \"The predictive model estimates a 92% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"recommendations\": [{\"action\": \"Initiate immediate, high-intensity intervention.\", \"rationale\": \"The model indicates a very high risk of failure or withdrawal (92%), which warrants urgent attention to prevent the student from dropping out or failing.\", \"evidence_ids\": [\"M1\"]}, {\"action\": \"Review the student's current workload and support needs.\", \"rationale\": \"The student is enrolled in 220 credits, which is a heavy load that may contribute to the high risk of unsuccessful outcomes.\", \"evidence_ids\": [\"E25\"]}, {\"action\": \"Engage with the student to understand their current engagement levels and barriers.\", \"rationale\": \"While the student showed activity in weeks 3-4 (12 days active, 484 clicks), the data for week 4 alone (190 clicks over 6 days) suggests a drop in daily frequency compared to the previous week, which is associated with the high risk prediction.\", \"evidence_ids\": [\"E7\", \"E6\", \"E8\"]}], \"evidence_limitations\": [\"The provided evidence only covers weeks 3 and 4; there is no data for weeks 5, 6, or 7, which are critical for assessing long-term trends and final outcomes.\", \"The predictive model output (M1) is an inference and should be treated as a risk indicator rather than a confirmed outcome.\", \"There is no data regarding the student's assessment scores, assignment submissions, or specific content engagement, which are often key predictors of success in distance learning.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student is enrolled in module CCC, presentation 2014J, and is currently at the end of week 4.",
+    "evidence_ids": []
+   },
+   {
+    "statement": "This is the student's first attempt at this module.",
+    "evidence_ids": [
+     "E24"
+    ]
+   },
+   {
+    "statement": "The student is studying 220 total credits in this presentation.",
+    "evidence_ids": [
+     "E25"
+    ]
+   },
+   {
+    "statement": "The student had 190 VLE clicks in week 4 (days 21-27).",
+    "evidence_ids": [
+     "E7"
+    ]
+   },
+   {
+    "statement": "The student had 484 VLE clicks in weeks 3-4 combined (days 14-27).",
+    "evidence_ids": [
+     "E6"
+    ]
+   },
+   {
+    "statement": "The student was active on the VLE on 12 out of 14 days in weeks 3-4.",
+    "evidence_ids": [
+     "E8"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The predictive model estimates a 92% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Initiate immediate, high-intensity intervention.",
+    "rationale": "The model indicates a very high risk of failure or withdrawal (92%), which warrants urgent attention to prevent the student from dropping out or failing.",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "action": "Review the student's current workload and support needs.",
+    "rationale": "The student is enrolled in 220 credits, which is a heavy load that may contribute to the high risk of unsuccessful outcomes.",
+    "evidence_ids": [
+     "E25"
+    ]
+   },
+   {
+    "action": "Engage with the student to understand their current engagement levels and barriers.",
+    "rationale": "While the student showed activity in weeks 3-4 (12 days active, 484 clicks), the data for week 4 alone (190 clicks over 6 days) suggests a drop in daily frequency compared to the previous week, which is associated with the high risk prediction.",
+    "evidence_ids": [
+     "E7",
+     "E6",
+     "E8"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The provided evidence only covers weeks 3 and 4; there is no data for weeks 5, 6, or 7, which are critical for assessing long-term trends and final outcomes.",
+   "The predictive model output (M1) is an inference and should be treated as a risk indicator rather than a confirmed outcome.",
+   "There is no data regarding the student's assessment scores, assignment submissions, or specific content engagement, which are often key predictors of success in distance learning."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 521,
+  "completion_tokens": 583,
+  "total_tokens": 1104,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 24.69,
+ "model": "qwen/qwen3.5-9b"
+}

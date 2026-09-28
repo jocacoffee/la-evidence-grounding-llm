@@ -1,0 +1,227 @@
+{
+ "enrolment_id": "DDD_2014J_645864",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E2",
+  "E10",
+  "E21",
+  "E25",
+  "E26",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 645864, module DDD, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 70% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 55, see E21) increases predicted risk by 26.4 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 3.4 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: active_days (value 32, see E2) decreases predicted risk by 2.5 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E2] Number of distinct days with VLE activity up to the end of week 4: 32\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 137\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 55\n[E25] Total credits of modules being studied in this presentation: 120\n[E26] Highest education level on entry: A Level or Equivalent\n[E27] Registration day relative to module start (negative = days before start): -121\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has completed 32 distinct days of VLE activity by the end of week 4.\", \"evidence_ids\": [\"E2\"]}, {\"statement\": \"The student has clicked on discussion forums 137 times by the end of week 4.\", \"evidence_ids\": [\"E10\"]}, {\"statement\": \"The student's mean assessment score prior to the end of week 4 is 55.\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student's highest education level on entry is A Level or Equivalent.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The student registered 121 days before the module start date.\", \"evidence_ids\": [\"E27\"]}], \"model_inferences\": [{\"statement\": \"The model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"The model associates a mean score of 55 with an increased risk of failure.\", \"evidence_ids\": [\"X1\", \"E21\"]}, {\"statement\": \"The model associates an A Level or Equivalent education level with a decreased risk of failure.\", \"evidence_ids\": [\"X2\", \"E26\"]}, {\"statement\": \"The model associates 32 active days with a decreased risk of failure.\", \"evidence_ids\": [\"X3\", \"E2\"]}], \"recommendations\": [{\"action\": \"Review assessment performance immediately.\", \"rationale\": \"The observed mean score of 55 (E21) is the primary factor driving the high predicted risk of failure according to the model (X1).\", \"evidence_ids\": [\"E21\", \"X1\"]}, {\"action\": \"Monitor engagement levels against module expectations.\", \"rationale\": \"While the student has shown activity (32 days, E2), the model indicates this level of engagement is associated with higher risk in this specific context (X3). Verify if this activity aligns with the required workload for the 120 credits (E25).\", \"evidence_ids\": [\"E2\", \"X3\", \"E25\"]}, {\"action\": \"Provide targeted academic support focused on assessment improvement.\", \"rationale\": \"Given the high predicted risk (M1) and the strong association of the current mean score with that risk (X1), interventions should prioritize improving assessment outcomes rather than general engagement.\", \"evidence_ids\": [\"M1\", \"X1\"]}], \"evidence_limitations\": [\"The model's high risk prediction (M1) is based on early data (end of week 4); the student's final outcome is not yet known.\", \"The model attributes risk to mean score (X1) and education level (X2) based on associations, not proven causality.\", \"Insufficient data exists to determine if the current engagement levels (E2, E10) are sufficient for the total module credit load (E25) or if they will sustain through the full module duration.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has completed 32 distinct days of VLE activity by the end of week 4.",
+    "evidence_ids": [
+     "E2"
+    ]
+   },
+   {
+    "statement": "The student has clicked on discussion forums 137 times by the end of week 4.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's mean assessment score prior to the end of week 4 is 55.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry is A Level or Equivalent.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The student registered 121 days before the module start date.",
+    "evidence_ids": [
+     "E27"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The model associates a mean score of 55 with an increased risk of failure.",
+    "evidence_ids": [
+     "X1",
+     "E21"
+    ]
+   },
+   {
+    "statement": "The model associates an A Level or Equivalent education level with a decreased risk of failure.",
+    "evidence_ids": [
+     "X2",
+     "E26"
+    ]
+   },
+   {
+    "statement": "The model associates 32 active days with a decreased risk of failure.",
+    "evidence_ids": [
+     "X3",
+     "E2"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Review assessment performance immediately.",
+    "rationale": "The observed mean score of 55 (E21) is the primary factor driving the high predicted risk of failure according to the model (X1).",
+    "evidence_ids": [
+     "E21",
+     "X1"
+    ]
+   },
+   {
+    "action": "Monitor engagement levels against module expectations.",
+    "rationale": "While the student has shown activity (32 days, E2), the model indicates this level of engagement is associated with higher risk in this specific context (X3). Verify if this activity aligns with the required workload for the 120 credits (E25).",
+    "evidence_ids": [
+     "E2",
+     "X3",
+     "E25"
+    ]
+   },
+   {
+    "action": "Provide targeted academic support focused on assessment improvement.",
+    "rationale": "Given the high predicted risk (M1) and the strong association of the current mean score with that risk (X1), interventions should prioritize improving assessment outcomes rather than general engagement.",
+    "evidence_ids": [
+     "M1",
+     "X1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's high risk prediction (M1) is based on early data (end of week 4); the student's final outcome is not yet known.",
+   "The model attributes risk to mean score (X1) and education level (X2) based on associations, not proven causality.",
+   "Insufficient data exists to determine if the current engagement levels (E2, E10) are sufficient for the total module credit load (E25) or if they will sustain through the full module duration."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 710,
+  "completion_tokens": 651,
+  "total_tokens": 1361,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 26.11,
+ "model": "qwen/qwen3.5-9b"
+}

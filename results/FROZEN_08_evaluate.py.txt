@@ -1,0 +1,273 @@
+"""Step 8 - Experiment 7: deterministic evaluation of LLM outputs (no human, no LLM judge).
+
+Claim units = statements in observed_facts, model_inferences and recommendations[].rationale.
+(evidence_limitations are hedges by design and are not claim units; recommendation actions are only
+ checked for asserted non-observable content.)
+For each unit:
+  refs      specific features referenced (regex lexicon, feature_dictionary.py) + generic groups
+  numbers   numeric literals after removing identifiers/time-window/ID tokens
+  nonobs    assertion about something OULAD does not record (lexicon), ignored when hedged
+A unit is a (student-specific) factual claim if it has refs, numbers or an asserted non-observable.
+
+Metrics (per output, then averaged per condition; micro-averages also reported):
+  unsupported_claim_rate  claims NOT supported by the context given to the LLM
+                          (non-observable content, a referenced feature absent from the context, or a
+                          number that does not match any context value)
+  evidence_coverage       claims linkable to a specific Evidence-Store item of that student: >=1 specific
+                          feature, no asserted non-observable content, numbers consistent with the store
+  factual_consistency     numeric mentions attributable to a referenced feature that match the student's
+                          TRUE store value (full store, independent of the context)
+  shap_consistency        |SHAP top-3 features mentioned anywhere in the response| / 3
+  recommendation_specificity  mean over recommendations of (problem + evidence + action) / 3
+Plus: citation validity, insufficiency declared, asserted non-observable rate, causal-language rate.
+Usage: python src/08_evaluate.py [pilot|main]
+"""
+import json
+import re
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from feature_dictionary import FEATURES, INFERENCE, NON_OBSERVABLE  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+SET = sys.argv[1] if len(sys.argv) > 1 else "main"
+CONDITIONS = ["C1_llm_only", "C2_student_data", "C3_rag", "C4_shap_rag"]
+ALL = {**FEATURES, **INFERENCE}
+LEX = {f: re.compile(m["lex"], re.I) for f, m in ALL.items()}
+GROUPS = {
+    "g_vle": (re.compile(r"\bengag\w*|\bactivity\b|\bactive\b|\binteract\w*|\bparticipat\w*|\bvle\b|\bonline\b|"
+                         r"\bclicks?\b|\blog(ged)? ?in|\baccess(ed)?\b", re.I),
+              {f for f, m in FEATURES.items() if m["type"].startswith("vle")}),
+    "g_assessment": (re.compile(r"\bassessments?\b|\bassignments?\b|\btmas?\b|\bcmas?\b|\bcoursework\b", re.I),
+                     {f for f, m in FEATURES.items() if m["type"].startswith("assessment")}),
+    "g_risk": (re.compile(r"\bat[- ]risk\b|\bunsuccessful\b|\bfail(ing|ure)?\b|\bwithdraw\w*\b|\bdrop ?out\b|"
+                          r"\bnot (complete|pass)\w*", re.I), {"predicted_risk"}),
+}
+NONOBS = re.compile(NON_OBSERVABLE, re.I)
+HEDGE = re.compile(r"\b(may|might|could|possibly|potential(ly)?|perhaps|whether|if|unclear|unknown|cannot|suggest\w*|"
+                   r"can't|not (known|available|provided|recorded|possible|clear)|no (information|data|evidence)|"
+                   r"any|explore|ask|check|identify|understand|underlying|review|discuss)\b", re.I)
+CAUSAL = re.compile(r"\bbecause\b|\bdue to\b|\bcaused? by\b|\bleads? to\b|\bresult(s|ed)? in\b|\bas a result of\b|"
+                    r"\bowing to\b|\bresponsible for\b|\bdrives?\b", re.I)
+ACTION = re.compile(r"\b(contact|reach(ing)? out|check(ing)?[- ]in|messag|email|call|meet|schedul|arrang|invit|"
+                    r"encourag|remind|offer|provid|shar|signpost|refer|monitor|review|follow(ing)?[- ]up|discuss|"
+                    r"recommend|suggest|highlight|direct|guid|support|set up|send|acknowledg|prais|commend|"
+                    r"prioriti[sz]|address|interven|initiat|continu|maintain|leverag|consider|ensur|confirm|clarif|"
+                    r"help|assist|facilitat|recogni[sz]|reinforc|flag|track|celebrat)\w*", re.I)
+IDTOK = re.compile(r"\b[EMX]\d{1,2}\b")
+STRIP = [re.compile(p, re.I) for p in [
+    r"\[[EMX]\d{1,2}\]", r"\b[EMX]\d{1,2}\b", r"\b20\d\d[BJ]\b", r"\b[A-G]{3}\b",
+    r"\bweeks? \d+\s*(?:-|–|to|and)\s*\d+\b", r"\bweeks? \d+\b", r"\bdays? -?\d+\s*(?:-|–|to|and)\s*\d+\b",
+    r"\bday -?\d+\b", r"\b(?:out )?of (?:the )?(?:last )?14 days\b", r"\brank \d\b", r"\btop[- ]?\d\b",
+    r"\b0\s*(?:-|–|to)\s*100\b", r"-?100% to \+?100%", r"\(1\.0 = median\)", r"\bstudent id \d+\b",
+    r"\b(?:first|over|within|past|last|the)(?: the)?(?: first)? (?:4|four) weeks\b", r"\b4 weeks\b", r"\b\d\s?-\s?\d\b",
+    r"\bout of 100\b", r"\b4-week\b", r"/\s?100\b", r"\b(?:3|4|three|four) and (?:3|4)\b",
+    r"\b\d+(?:st|nd|rd|th)\b"]]
+NUM = re.compile(r"(?<![\w.])[-+]?\d+(?:[.,]\d+)?(?:\s?%)?")
+
+
+def load_store():
+    st = defaultdict(dict)
+    for line in open(ROOT / "data" / "evidence_store.jsonl"):
+        it = json.loads(line)
+        st[it["enrolment_id"]][it["id"]] = it
+    return st
+
+
+def candidates(feature, v, items=None):
+    """Numeric forms under which a value may legitimately appear in text."""
+    if v is None or feature == "predicted_class":
+        return []
+    k = ALL[feature]["fmt"]
+    if k in ("int", "regdays"):
+        return [v, abs(v)]
+    if k == "pct":
+        return [v * 100, abs(v * 100), v]
+    if k == "ratio":
+        return [v, v * 100, abs(1 - v) * 100]
+    if k == "index":  # only the index itself; "-65%" read as a percent change is NOT accepted
+        return [v]
+    if k == "score":
+        return [v]
+    if k == "bool":
+        return [v]
+    if k == "edu":
+        return []
+    return [v]
+
+
+def derived(items):
+    """Simple arithmetic derivable from the store: percent change / difference between the two windows."""
+    a = items["E5"]["value"] if "E5" in items else None
+    b = items["E6"]["value"] if "E6" in items else None
+    out = []
+    if a is not None and b is not None:
+        out.append(abs(b - a))
+        if a > 0:
+            out.append(abs(b - a) / a * 100)
+    return out
+
+
+def match(n_txt, pool):
+    s = n_txt.replace("%", "").replace(",", ".").strip()
+    n = float(s)
+    dec = len(s.split(".")[1]) if "." in s else 0
+    tol = 0.5 if dec == 0 else (0.051 if dec == 1 else 0.0051)
+    return any(abs(abs(n) - abs(c)) <= tol for c in pool)
+
+
+def numbers(text, student_id):
+    t = text.replace(str(student_id), " ")
+    for p in STRIP:
+        t = p.sub(" ", t)
+    t = re.sub(r"\bzero\b", "0", t, flags=re.I)
+    return [m.group(0) for m in NUM.finditer(t)]
+
+
+def refs_of(text):
+    spec = {f for f, rx in LEX.items() if rx.search(text)}
+    groups = {g for g, (rx, _) in GROUPS.items() if rx.search(text)}
+    return spec, groups
+
+
+def eval_output(o, items):
+    ctx_ids = set(o["context_ids"])
+    ctx_feats = {items[i]["feature"] for i in ctx_ids if i in items}
+    ctx_items = [items[i] for i in ctx_ids if i in items]
+    ctx_pool = defaultdict(list)
+    for it in ctx_items:
+        if it["category"] == "model_explanation":
+            ctx_pool[it["feature"]] += [abs(it["value"]) * 100, abs(it["value"])]
+            ctx_pool[it["feature"]] += candidates(it["feature"], it["feature_value"])
+        else:
+            ctx_pool[it["feature"]] += candidates(it["feature"], it["value"])
+    if {"E5", "E6"} <= ctx_ids or o["condition"] == "C2_student_data":
+        ctx_pool["_derived"] = derived(items)
+    true_pool = defaultdict(list)
+    for it in items.values():
+        if it["category"] == "model_explanation":
+            if it["shap_rank"] <= 3:  # store explanation items (only top-3 are ever shown)
+                true_pool[it["feature"]] += [abs(it["value"]) * 100, abs(it["value"])]
+            continue
+        true_pool[it["feature"]] += candidates(it["feature"], it["value"])
+    true_pool["_derived"] = derived(items)
+    true_all = [c for v in true_pool.values() for c in v]
+    ctx_all = [c for v in ctx_pool.values() for c in v]
+    sid = items["E1"]["student_id"]
+    p = o["parsed"] or {}
+    units = [("fact", x.get("statement", ""), x.get("evidence_ids", [])) for x in p.get("observed_facts", [])]
+    units += [("inference", x.get("statement", ""), x.get("evidence_ids", [])) for x in p.get("model_inferences", [])]
+    units += [("rationale", x.get("rationale", ""), x.get("evidence_ids", [])) for x in p.get("recommendations", [])]
+    audit, claims = [], []
+    num_total = num_ok = 0
+    for kind, text, cited in units:
+        spec, groups = refs_of(text)
+        hedged = bool(HEDGE.search(text))
+        nonobs = bool(NONOBS.search(text)) and not (hedged and kind != "fact")
+        if hedged and kind != "fact":  # the LLM's own hedged risk interpretation is not a factual claim
+            groups.discard("g_risk")
+            spec.discard("predicted_risk")
+        nums = numbers(text, sid)
+        is_claim = bool(spec or groups or nums or nonobs)
+        if not is_claim:
+            audit.append(dict(kind=kind, text=text, is_claim=False))
+            continue
+        reasons = []
+        if nonobs:
+            reasons.append("non_observable")
+        spec_ctx = spec & ctx_feats
+        if spec and not spec_ctx:
+            reasons.append(f"no_referenced_feature_in_context:{sorted(spec)}")
+        if not spec:
+            for g in groups:
+                if not (GROUPS[g][1] & ctx_feats):
+                    reasons.append(f"group_not_in_context:{g}")
+        if "g_risk" in groups and "predicted_risk" not in ctx_feats:
+            reasons.append("risk_assertion_without_model_output")
+        ref_ctx_pool = [c for f in spec_ctx for c in ctx_pool.get(f, [])] + ctx_pool.get("_derived", [])
+        ref_true_pool = [c for f in spec for c in true_pool.get(f, [])] + true_pool["_derived"]
+        n_bad_ctx, n_bad_true = [], []
+        for n in nums:
+            # a number must match a context value (referenced features first, then any context value)
+            if not (match(n, ref_ctx_pool) or match(n, ctx_all)):
+                n_bad_ctx.append(n)
+            if spec:  # attributable numeric mention -> factual consistency vs the TRUE store
+                num_total += 1
+                ok = match(n, ref_true_pool) or match(n, true_all)
+                num_ok += ok
+                if not ok:
+                    n_bad_true.append(n)
+        if n_bad_ctx:
+            reasons.append(f"number_not_in_context:{n_bad_ctx}")
+        supported = not reasons
+        linked = bool(spec) and not nonobs and not n_bad_true
+        causal = bool(CAUSAL.search(text))
+        claims.append(dict(supported=supported, linked=linked, nonobs=nonobs, causal=causal, kind=kind))
+        audit.append(dict(kind=kind, text=text, is_claim=True, spec=sorted(spec), groups=sorted(groups),
+                          numbers=nums, hedged=hedged, supported=supported, linked=linked, reasons=reasons,
+                          numbers_inconsistent_with_store=n_bad_true, causal=causal, cited=cited))
+    # SHAP consistency over the whole response (limitations excluded)
+    full_text = " ".join(t for _, t, _ in units) + " " + " ".join(
+        x.get("action", "") for x in p.get("recommendations", []))
+    top3 = [items[f"X{n}"]["feature"] for n in (1, 2, 3)]
+    shap_hits = [f for f in top3 if LEX[f].search(full_text)]
+    # recommendation specificity
+    spec_scores, comps = [], []
+    for x in p.get("recommendations", []):
+        rt, act = x.get("rationale", ""), x.get("action", "")
+        s_, g_ = refs_of(rt)
+        problem = bool(s_ or g_)
+        cited_valid = any(i in ctx_ids for i in x.get("evidence_ids", []))
+        nums = numbers(rt, sid)
+        evidence = cited_valid or any(f in ctx_feats for f in s_) or any(match(n, ctx_all) for n in nums)
+        action = bool(act.strip()) and bool(ACTION.search(act))
+        comps.append((problem, evidence, action))
+        spec_scores.append((problem + evidence + action) / 3)
+    action_nonobs = any(NONOBS.search(x.get("action", "")) and not HEDGE.search(x.get("action", ""))
+                        for x in p.get("recommendations", []))
+    cited_all = [i for _, _, c in units for i in c]
+    n = len(claims)
+    return {
+        "enrolment_id": o["enrolment_id"], "condition": o["condition"], "json_ok": o["json_ok"],
+        "n_units": len(units), "n_claims": n,
+        "n_unsupported": sum(not c["supported"] for c in claims), "n_linked": sum(c["linked"] for c in claims),
+        "unsupported_claim_rate": np.nan if n == 0 else sum(not c["supported"] for c in claims) / n,
+        "evidence_coverage": np.nan if n == 0 else sum(c["linked"] for c in claims) / n,
+        "n_fact_claims": sum(c["kind"] == "fact" for c in claims),
+        "n_fact_unsupported": sum(c["kind"] == "fact" and not c["supported"] for c in claims),
+        "unsupported_fact_rate": (lambda fc: np.nan if not fc else sum(not c["supported"] for c in fc) / len(fc))(
+            [c for c in claims if c["kind"] == "fact"]),
+        "n_numeric": num_total, "n_numeric_consistent": num_ok,
+        "factual_consistency": np.nan if num_total == 0 else num_ok / num_total,
+        "shap_consistency": len(shap_hits) / 3, "shap_top3": top3, "shap_hits": shap_hits,
+        "recommendation_specificity": np.nan if not spec_scores else float(np.mean(spec_scores)),
+        "rec_problem": np.nan if not comps else np.mean([c[0] for c in comps]),
+        "rec_evidence": np.nan if not comps else np.mean([c[1] for c in comps]),
+        "rec_action": np.nan if not comps else np.mean([c[2] for c in comps]),
+        "n_recommendations": len(comps),
+        "n_cited_ids": len(cited_all), "n_cited_invalid": sum(i not in ctx_ids for i in cited_all),
+        "insufficiency_declared": len(p.get("evidence_limitations", [])) > 0,
+        "asserted_non_observable": any(c["nonobs"] for c in claims) or action_nonobs,
+        "causal_language_rate": np.nan if n == 0 else sum(c["causal"] for c in claims) / n,
+        "audit": audit,
+    }
+
+
+if __name__ == "__main__":
+    store = load_store()
+    outs = [json.loads(l) for l in open(ROOT / "results" / f"llm_outputs_{SET}.jsonl")]
+    rows = [eval_output(o, store[o["enrolment_id"]]) for o in outs]
+    with open(ROOT / "results" / f"eval_audit_{SET}.jsonl", "w") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, default=lambda x: bool(x) if isinstance(x, np.bool_) else float(x)) + "\n")
+    df = pd.DataFrame([{k: v for k, v in r.items() if k not in ("audit", "shap_top3", "shap_hits")} for r in rows])
+    df.to_csv(ROOT / "results" / f"eval_per_output_{SET}.csv", index=False)
+    print(df.groupby("condition")[["n_claims", "unsupported_claim_rate", "evidence_coverage",
+                                   "factual_consistency", "shap_consistency", "recommendation_specificity",
+                                   "n_cited_invalid", "insufficiency_declared", "asserted_non_observable"]]
+          .mean().round(3).to_string())

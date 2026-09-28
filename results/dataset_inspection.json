@@ -1,0 +1,1204 @@
+{
+  "tables": {
+    "courses": {
+      "rows": 22,
+      "columns": [
+        "code_module",
+        "code_presentation",
+        "module_presentation_length"
+      ],
+      "dtypes": {
+        "code_module": "object",
+        "code_presentation": "object",
+        "module_presentation_length": "int64"
+      },
+      "missing": {},
+      "duplicated_rows": 0
+    },
+    "assessments": {
+      "rows": 206,
+      "columns": [
+        "code_module",
+        "code_presentation",
+        "id_assessment",
+        "assessment_type",
+        "date",
+        "weight"
+      ],
+      "dtypes": {
+        "code_module": "object",
+        "code_presentation": "object",
+        "id_assessment": "int64",
+        "assessment_type": "object",
+        "date": "float64",
+        "weight": "float64"
+      },
+      "missing": {
+        "date": 11
+      },
+      "duplicated_rows": 0
+    },
+    "vle": {
+      "rows": 6364,
+      "columns": [
+        "id_site",
+        "code_module",
+        "code_presentation",
+        "activity_type",
+        "week_from",
+        "week_to"
+      ],
+      "dtypes": {
+        "id_site": "int64",
+        "code_module": "object",
+        "code_presentation": "object",
+        "activity_type": "object",
+        "week_from": "float64",
+        "week_to": "float64"
+      },
+      "missing": {
+        "week_from": 5243,
+        "week_to": 5243
+      },
+      "duplicated_rows": 0
+    },
+    "studentInfo": {
+      "rows": 32593,
+      "columns": [
+        "code_module",
+        "code_presentation",
+        "id_student",
+        "gender",
+        "region",
+        "highest_education",
+        "imd_band",
+        "age_band",
+        "num_of_prev_attempts",
+        "studied_credits",
+        "disability",
+        "final_result"
+      ],
+      "dtypes": {
+        "code_module": "object",
+        "code_presentation": "object",
+        "id_student": "int64",
+        "gender": "object",
+        "region": "object",
+        "highest_education": "object",
+        "imd_band": "object",
+        "age_band": "object",
+        "num_of_prev_attempts": "int64",
+        "studied_credits": "int64",
+        "disability": "object",
+        "final_result": "object"
+      },
+      "missing": {
+        "imd_band": 1111
+      },
+      "duplicated_rows": 0
+    },
+    "studentRegistration": {
+      "rows": 32593,
+      "columns": [
+        "code_module",
+        "code_presentation",
+        "id_student",
+        "date_registration",
+        "date_unregistration"
+      ],
+      "dtypes": {
+        "code_module": "object",
+        "code_presentation": "object",
+        "id_student": "int64",
+        "date_registration": "float64",
+        "date_unregistration": "float64"
+      },
+      "missing": {
+        "date_registration": 45,
+        "date_unregistration": 22521
+      },
+      "duplicated_rows": 0
+    },
+    "studentAssessment": {
+      "rows": 173912,
+      "columns": [
+        "id_assessment",
+        "id_student",
+        "date_submitted",
+        "is_banked",
+        "score"
+      ],
+      "dtypes": {
+        "id_assessment": "int64",
+        "id_student": "int64",
+        "date_submitted": "int64",
+        "is_banked": "int64",
+        "score": "float64"
+      },
+      "missing": {
+        "score": 173
+      },
+      "duplicated_rows": 0
+    },
+    "studentVle": {
+      "rows": 10655280,
+      "columns": [
+        "code_module",
+        "code_presentation",
+        "id_student",
+        "id_site",
+        "date",
+        "sum_click"
+      ],
+      "dtypes": {
+        "code_module": "object",
+        "code_presentation": "object",
+        "id_student": "int64",
+        "id_site": "int64",
+        "date": "int64",
+        "sum_click": "int64"
+      },
+      "missing": {},
+      "duplicated_rows": 787170
+    }
+  },
+  "keys": {
+    "courses_unique_(module,presentation)": true,
+    "studentInfo_unique_(module,presentation,student)": true,
+    "studentRegistration_unique_(module,presentation,student)": true,
+    "assessments_unique_id_assessment": true,
+    "vle_unique_id_site": true,
+    "studentAssessment_unique_(assessment,student)": true,
+    "studentAssessment_ids_in_assessments": true,
+    "studentVle_sites_in_vle": true,
+    "info_vs_registration_same_rows": true,
+    "studentAssessment_rows_matching_an_enrolment": 173912,
+    "studentVle_enrolments_matching_studentInfo": 29228,
+    "studentVle_enrolments_total": 29228
+  },
+  "counts": {
+    "enrolments_(student x module-presentation)": 32593,
+    "unique_students": 28785,
+    "modules": 7,
+    "module_presentations": 22,
+    "presentations": [
+      "2013B",
+      "2013J",
+      "2014B",
+      "2014J"
+    ],
+    "students_with_>1_enrolment": 3538,
+    "students_repeating_same_module": 1271,
+    "vle_materials": 6364,
+    "vle_log_rows": 10655280,
+    "total_clicks": 39605099,
+    "assessments": 206,
+    "assessment_submissions": 173912
+  },
+  "courses": [
+    {
+      "code_module": "AAA",
+      "code_presentation": "2013J",
+      "module_presentation_length": 268,
+      "n_students": 383
+    },
+    {
+      "code_module": "AAA",
+      "code_presentation": "2014J",
+      "module_presentation_length": 269,
+      "n_students": 365
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2013J",
+      "module_presentation_length": 268,
+      "n_students": 2237
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2014J",
+      "module_presentation_length": 262,
+      "n_students": 2292
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2013B",
+      "module_presentation_length": 240,
+      "n_students": 1767
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2014B",
+      "module_presentation_length": 234,
+      "n_students": 1613
+    },
+    {
+      "code_module": "CCC",
+      "code_presentation": "2014J",
+      "module_presentation_length": 269,
+      "n_students": 2498
+    },
+    {
+      "code_module": "CCC",
+      "code_presentation": "2014B",
+      "module_presentation_length": 241,
+      "n_students": 1936
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2013J",
+      "module_presentation_length": 261,
+      "n_students": 1938
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2014J",
+      "module_presentation_length": 262,
+      "n_students": 1803
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2013B",
+      "module_presentation_length": 240,
+      "n_students": 1303
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2014B",
+      "module_presentation_length": 241,
+      "n_students": 1228
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2013J",
+      "module_presentation_length": 268,
+      "n_students": 1052
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2014J",
+      "module_presentation_length": 269,
+      "n_students": 1188
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2014B",
+      "module_presentation_length": 241,
+      "n_students": 694
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2013J",
+      "module_presentation_length": 268,
+      "n_students": 2283
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2014J",
+      "module_presentation_length": 269,
+      "n_students": 2365
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2013B",
+      "module_presentation_length": 240,
+      "n_students": 1614
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2014B",
+      "module_presentation_length": 241,
+      "n_students": 1500
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2013J",
+      "module_presentation_length": 261,
+      "n_students": 952
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2014J",
+      "module_presentation_length": 269,
+      "n_students": 749
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2014B",
+      "module_presentation_length": 241,
+      "n_students": 833
+    }
+  ],
+  "assessment_types": {
+    "TMA": 106,
+    "CMA": 76,
+    "Exam": 24
+  },
+  "assessments_missing_date_by_type": {
+    "Exam": 11
+  },
+  "final_result": {
+    "counts": {
+      "Pass": 12361,
+      "Withdrawn": 10156,
+      "Fail": 7052,
+      "Distinction": 3024
+    },
+    "proportions": {
+      "Pass": 0.3793,
+      "Withdrawn": 0.3116,
+      "Fail": 0.2164,
+      "Distinction": 0.0928
+    }
+  },
+  "final_result_by_module_presentation": [
+    {
+      "code_module": "AAA",
+      "code_presentation": "2013J",
+      "Distinction": 0.052,
+      "Fail": 0.117,
+      "Pass": 0.674,
+      "Withdrawn": 0.157
+    },
+    {
+      "code_module": "AAA",
+      "code_presentation": "2014J",
+      "Distinction": 0.066,
+      "Fail": 0.126,
+      "Pass": 0.627,
+      "Withdrawn": 0.181
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2013B",
+      "Distinction": 0.088,
+      "Fail": 0.26,
+      "Pass": 0.367,
+      "Withdrawn": 0.286
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2013J",
+      "Distinction": 0.079,
+      "Fail": 0.233,
+      "Pass": 0.401,
+      "Withdrawn": 0.288
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2014B",
+      "Distinction": 0.103,
+      "Fail": 0.246,
+      "Pass": 0.348,
+      "Withdrawn": 0.304
+    },
+    {
+      "code_module": "BBB",
+      "code_presentation": "2014J",
+      "Distinction": 0.079,
+      "Fail": 0.171,
+      "Pass": 0.424,
+      "Withdrawn": 0.327
+    },
+    {
+      "code_module": "CCC",
+      "code_presentation": "2014B",
+      "Distinction": 0.099,
+      "Fail": 0.194,
+      "Pass": 0.243,
+      "Withdrawn": 0.464
+    },
+    {
+      "code_module": "CCC",
+      "code_presentation": "2014J",
+      "Distinction": 0.122,
+      "Fail": 0.163,
+      "Pass": 0.284,
+      "Withdrawn": 0.431
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2013B",
+      "Distinction": 0.041,
+      "Fail": 0.277,
+      "Pass": 0.35,
+      "Withdrawn": 0.332
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2013J",
+      "Distinction": 0.051,
+      "Fail": 0.221,
+      "Pass": 0.377,
+      "Withdrawn": 0.351
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2014B",
+      "Distinction": 0.097,
+      "Fail": 0.211,
+      "Pass": 0.293,
+      "Withdrawn": 0.399
+    },
+    {
+      "code_module": "DDD",
+      "code_presentation": "2014J",
+      "Distinction": 0.062,
+      "Fail": 0.202,
+      "Pass": 0.377,
+      "Withdrawn": 0.359
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2013J",
+      "Distinction": 0.121,
+      "Fail": 0.19,
+      "Pass": 0.458,
+      "Withdrawn": 0.231
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2014B",
+      "Distinction": 0.104,
+      "Fail": 0.236,
+      "Pass": 0.411,
+      "Withdrawn": 0.249
+    },
+    {
+      "code_module": "EEE",
+      "code_presentation": "2014J",
+      "Distinction": 0.132,
+      "Fail": 0.167,
+      "Pass": 0.444,
+      "Withdrawn": 0.258
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2013B",
+      "Distinction": 0.073,
+      "Fail": 0.261,
+      "Pass": 0.411,
+      "Withdrawn": 0.255
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2013J",
+      "Distinction": 0.082,
+      "Fail": 0.225,
+      "Pass": 0.398,
+      "Withdrawn": 0.296
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2014B",
+      "Distinction": 0.071,
+      "Fail": 0.256,
+      "Pass": 0.365,
+      "Withdrawn": 0.308
+    },
+    {
+      "code_module": "FFF",
+      "code_presentation": "2014J",
+      "Distinction": 0.109,
+      "Fail": 0.166,
+      "Pass": 0.363,
+      "Withdrawn": 0.362
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2013J",
+      "Distinction": 0.148,
+      "Fail": 0.309,
+      "Pass": 0.474,
+      "Withdrawn": 0.069
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2014B",
+      "Distinction": 0.154,
+      "Fail": 0.306,
+      "Pass": 0.42,
+      "Withdrawn": 0.12
+    },
+    {
+      "code_module": "GGG",
+      "code_presentation": "2014J",
+      "Distinction": 0.17,
+      "Fail": 0.239,
+      "Pass": 0.423,
+      "Withdrawn": 0.168
+    }
+  ],
+  "demographic_missing": {
+    "code_module": 0,
+    "code_presentation": 0,
+    "id_student": 0,
+    "gender": 0,
+    "region": 0,
+    "highest_education": 0,
+    "imd_band": 1111,
+    "age_band": 0,
+    "num_of_prev_attempts": 0,
+    "studied_credits": 0,
+    "disability": 0,
+    "final_result": 0
+  },
+  "temporal": {
+    "studentVle.date_range": [
+      -25,
+      269
+    ],
+    "studentVle_rows_before_day0": 688988,
+    "assessments.date_range": [
+      12.0,
+      261.0
+    ],
+    "studentAssessment.date_submitted_range": [
+      -11,
+      608
+    ],
+    "registration.date_registration_range": [
+      -322.0,
+      167.0
+    ],
+    "registration.date_unregistration_range": [
+      -365.0,
+      444.0
+    ],
+    "vle_week_from_missing_pct": 0.8239,
+    "course_length_range_days": [
+      234,
+      269
+    ]
+  },
+  "banked": {
+    "n_banked": 1909,
+    "banked_date_submitted_describe": {
+      "count": 1909.0,
+      "mean": -1.0,
+      "std": 0.0,
+      "min": -1.0,
+      "25%": -1.0,
+      "50%": -1.0,
+      "75%": -1.0,
+      "max": -1.0
+    }
+  },
+  "withdrawal_consistency": {
+    "false": {
+      "Distinction": 3024,
+      "Fail": 7043,
+      "Pass": 12361,
+      "Withdrawn": 93
+    },
+    "true": {
+      "Distinction": 0,
+      "Fail": 9,
+      "Pass": 0,
+      "Withdrawn": 10063
+    }
+  },
+  "unregistration_date_describe": {
+    "count": 10072.0,
+    "mean": 49.8,
+    "std": 82.5,
+    "min": -365.0,
+    "25%": -2.0,
+    "50%": 27.0,
+    "75%": 109.0,
+    "max": 444.0
+  },
+  "cutoff_analysis": {
+    "cutoff_day_exclusive": 28,
+    "enrolments_unregistered_before_cutoff": 5040,
+    "enrolments_unregistered_on_or_before_day0": 3097,
+    "enrolments_registered_after_cutoff": 18,
+    "enrolments_missing_registration_date": 45,
+    "assessments_due_before_cutoff_by_mp": [
+      {
+        "code_module": "AAA",
+        "code_presentation": "2013J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "AAA",
+        "code_presentation": "2014J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013B",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014B",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014B",
+        "TMA": NaN,
+        "CMA": 1.0
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014J",
+        "TMA": NaN,
+        "CMA": 1.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013B",
+        "TMA": 1.0,
+        "CMA": 1.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014B",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013B",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013J",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014B",
+        "TMA": 1.0,
+        "CMA": NaN
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014J",
+        "TMA": 1.0,
+        "CMA": NaN
+      }
+    ],
+    "module_presentations_with_assessment_due_before_cutoff": 16,
+    "first_assessment_due_day_by_mp": {
+      "AAA-2013J": 19.0,
+      "AAA-2014J": 19.0,
+      "BBB-2013B": 19.0,
+      "BBB-2013J": 19.0,
+      "BBB-2014B": 12.0,
+      "BBB-2014J": 19.0,
+      "CCC-2014B": 18.0,
+      "CCC-2014J": 18.0,
+      "DDD-2013B": 23.0,
+      "DDD-2013J": 25.0,
+      "DDD-2014B": 25.0,
+      "DDD-2014J": 20.0,
+      "EEE-2013J": 33.0,
+      "EEE-2014B": 33.0,
+      "EEE-2014J": 33.0,
+      "FFF-2013B": 19.0,
+      "FFF-2013J": 19.0,
+      "FFF-2014B": 24.0,
+      "FFF-2014J": 24.0,
+      "GGG-2013J": 61.0,
+      "GGG-2014B": 61.0,
+      "GGG-2014J": 61.0
+    },
+    "enrolments_with_>=1_submission_before_cutoff": 20185,
+    "enrolments_with_vle_activity_before_cutoff": 28774,
+    "enrolments_still_registered_at_cutoff": 27553,
+    "final_result_still_registered_at_cutoff": {
+      "Pass": 12361,
+      "Fail": 7044,
+      "Withdrawn": 5124,
+      "Distinction": 3024
+    },
+    "still_registered_without_vle_activity_before_cutoff": 940,
+    "final_result_of_still_registered_without_activity": {
+      "Fail": 563,
+      "Withdrawn": 209,
+      "Pass": 147,
+      "Distinction": 21
+    }
+  },
+  "assessments_due_by_week": {
+    "2": 1,
+    "3": 11,
+    "4": 17,
+    "5": 22,
+    "6": 24,
+    "8": 40
+  },
+  "mp_with_assessment_due_by_week": {
+    "2": 1,
+    "3": 11,
+    "4": 16,
+    "5": 19,
+    "6": 19,
+    "8": 19
+  },
+  "presentations_per_module": {
+    "AAA": [
+      "2013J",
+      "2014J"
+    ],
+    "BBB": [
+      "2013B",
+      "2013J",
+      "2014B",
+      "2014J"
+    ],
+    "CCC": [
+      "2014B",
+      "2014J"
+    ],
+    "DDD": [
+      "2013B",
+      "2013J",
+      "2014B",
+      "2014J"
+    ],
+    "EEE": [
+      "2013J",
+      "2014B",
+      "2014J"
+    ],
+    "FFF": [
+      "2013B",
+      "2013J",
+      "2014B",
+      "2014J"
+    ],
+    "GGG": [
+      "2013J",
+      "2014B",
+      "2014J"
+    ]
+  },
+  "final_result_by_year": {
+    "Distinction": {
+      "2013": 1076,
+      "2014": 1948
+    },
+    "Fail": {
+      "2013": 3242,
+      "2014": 3810
+    },
+    "Pass": {
+      "2013": 5494,
+      "2014": 6867
+    },
+    "Withdrawn": {
+      "2013": 3717,
+      "2014": 6439
+    }
+  },
+  "enrolments_by_presentation": {
+    "2013B": 4684,
+    "2013J": 8845,
+    "2014B": 7804,
+    "2014J": 11260
+  },
+  "vle_activity_types": {
+    "resource": 2660,
+    "subpage": 1055,
+    "oucontent": 996,
+    "url": 886,
+    "forumng": 194,
+    "quiz": 127,
+    "page": 102,
+    "oucollaborate": 82,
+    "questionnaire": 61,
+    "ouwiki": 49,
+    "dataplus": 28,
+    "externalquiz": 26,
+    "homepage": 22,
+    "ouelluminate": 21,
+    "glossary": 21,
+    "dualpane": 20,
+    "repeatactivity": 5,
+    "htmlactivity": 4,
+    "sharedsubpage": 3,
+    "folder": 2
+  },
+  "clicks_by_activity_type": {
+    "oucontent": 11206803,
+    "forumng": 7973390,
+    "quiz": 6981240,
+    "homepage": 6949064,
+    "subpage": 3411582,
+    "resource": 1110132,
+    "ouwiki": 894512,
+    "url": 566702,
+    "oucollaborate": 108974,
+    "glossary": 87962,
+    "questionnaire": 64764,
+    "externalquiz": 64292,
+    "page": 63631,
+    "dataplus": 47468,
+    "ouelluminate": 39028,
+    "dualpane": 20716,
+    "htmlactivity": 9239,
+    "folder": 5420,
+    "sharedsubpage": 171,
+    "repeatactivity": 9
+  },
+  "extra": {
+    "missing_registration_date_final_result": {
+      "Withdrawn": 39,
+      "Fail": 5,
+      "Pass": 1
+    },
+    "missing_registration_date_unregistered": 39,
+    "studentVle_duplicate_rows": 787170,
+    "studentVle_duplicate_key_rows_(student,site,date)": 2195960,
+    "score_missing_by_type": {
+      "TMA": 173
+    },
+    "pre_cutoff_submissions_with_deadline_after_cutoff": 2622,
+    "pre_cutoff_submissions_total_nonbanked": 23439,
+    "pre_cutoff_submissions_by_type": {
+      "TMA": 17038,
+      "CMA": 6401
+    },
+    "late_submission_rate_nonbanked": 0.2867,
+    "assessments_due_before_cutoff": [
+      {
+        "code_module": "AAA",
+        "code_presentation": "2013J",
+        "id_assessment": 1752,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 10.0
+      },
+      {
+        "code_module": "AAA",
+        "code_presentation": "2014J",
+        "id_assessment": 1758,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 10.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013B",
+        "id_assessment": 14984,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 5.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013J",
+        "id_assessment": 14996,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 5.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014B",
+        "id_assessment": 15008,
+        "assessment_type": "TMA",
+        "date": 12.0,
+        "weight": 5.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014J",
+        "id_assessment": 15020,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 0.0
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014B",
+        "id_assessment": 24286,
+        "assessment_type": "CMA",
+        "date": 18.0,
+        "weight": 2.0
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014J",
+        "id_assessment": 24295,
+        "assessment_type": "CMA",
+        "date": 18.0,
+        "weight": 2.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013B",
+        "id_assessment": 25341,
+        "assessment_type": "CMA",
+        "date": 23.0,
+        "weight": 2.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013B",
+        "id_assessment": 25334,
+        "assessment_type": "TMA",
+        "date": 25.0,
+        "weight": 7.5
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013J",
+        "id_assessment": 25348,
+        "assessment_type": "TMA",
+        "date": 25.0,
+        "weight": 10.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014B",
+        "id_assessment": 25355,
+        "assessment_type": "TMA",
+        "date": 25.0,
+        "weight": 10.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014J",
+        "id_assessment": 25362,
+        "assessment_type": "TMA",
+        "date": 20.0,
+        "weight": 5.0
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013B",
+        "id_assessment": 34860,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 12.5
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013J",
+        "id_assessment": 34873,
+        "assessment_type": "TMA",
+        "date": 19.0,
+        "weight": 12.5
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014B",
+        "id_assessment": 34886,
+        "assessment_type": "TMA",
+        "date": 24.0,
+        "weight": 12.5
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014J",
+        "id_assessment": 34899,
+        "assessment_type": "TMA",
+        "date": 24.0,
+        "weight": 12.5
+      }
+    ],
+    "exam_submissions": 4959,
+    "weight_sum_non_exam_by_mp": [
+      {
+        "code_module": "AAA",
+        "code_presentation": "2013J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "AAA",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2013J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "BBB",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "CCC",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2013J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "DDD",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "EEE",
+        "code_presentation": "2013J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "EEE",
+        "code_presentation": "2014B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "EEE",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2013J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014B",
+        "weight": 100.0
+      },
+      {
+        "code_module": "FFF",
+        "code_presentation": "2014J",
+        "weight": 100.0
+      },
+      {
+        "code_module": "GGG",
+        "code_presentation": "2013J",
+        "weight": 0.0
+      },
+      {
+        "code_module": "GGG",
+        "code_presentation": "2014B",
+        "weight": 0.0
+      },
+      {
+        "code_module": "GGG",
+        "code_presentation": "2014J",
+        "weight": 0.0
+      }
+    ],
+    "population_after_exclusions": 27535,
+    "population_final_result": {
+      "Pass": 12356,
+      "Fail": 7037,
+      "Withdrawn": 5119,
+      "Distinction": 3023
+    },
+    "split_train_n": 18321,
+    "split_test_n": 9214,
+    "split_train_final_result": {
+      "Pass": 8064,
+      "Fail": 5062,
+      "Withdrawn": 3336,
+      "Distinction": 1859
+    },
+    "split_test_final_result": {
+      "Pass": 4292,
+      "Fail": 1975,
+      "Withdrawn": 1783,
+      "Distinction": 1164
+    },
+    "students_in_both_train_and_test": 1259,
+    "test_modules_seen_in_train": [
+      "AAA",
+      "BBB",
+      "CCC",
+      "DDD",
+      "EEE",
+      "FFF",
+      "GGG"
+    ],
+    "modules_2014_not_in_2013": [
+      "CCC"
+    ],
+    "withdrawn_in_population_unreg_date_quantiles": {
+      "0.0": 28.0,
+      "0.1": 41.0,
+      "0.25": 63.0,
+      "0.5": 109.0,
+      "0.75": 159.75,
+      "0.9": 202.0,
+      "1.0": 444.0
+    },
+    "withdrawn_in_population_missing_unreg_date": 93,
+    "enrolments_with_pre_start_vle_activity": 23809,
+    "vle_week_from_available_by_module": {
+      "AAA": 0.015,
+      "BBB": 0.161,
+      "CCC": 0.024,
+      "DDD": 0.001,
+      "EEE": 0.235,
+      "FFF": 0.42,
+      "GGG": 0.033
+    }
+  }
+}

@@ -1,0 +1,230 @@
+{
+ "enrolment_id": "FFF_2014J_648685",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E6",
+  "E7",
+  "E10",
+  "E15",
+  "E16",
+  "E21",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 648685, module FFF, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 16% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 98, see E21) decreases predicted risk by 21.9 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 1.51, see E16) decreases predicted risk by 5.7 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 4.0 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E6] VLE clicks in weeks 3-4 (days 14-27): 366\n[E7] VLE clicks in week 4 (days 21-27): 221\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 204\n[E15] Days between the last VLE activity and the end of week 4: 0\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 1.51\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 98\n[E26] Highest education level on entry: A Level or Equivalent\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{ \"observed_facts\": [ { \"statement\": \"The student has a mean score of 98 on assessments submitted before the end of week 4.\", \"evidence_ids\": [\"E21\"] }, { \"statement\": \"The student has 366 VLE clicks in weeks 3-4 (days 14-27).\", \"evidence_ids\": [\"E6\"] }, { \"statement\": \"The student has 221 VLE clicks in week 4 (days 21-27).\", \"evidence_ids\": [\"E7\"] }, { \"statement\": \"The student has clicked on discussion forums 204 times up to the end of week 4.\", \"evidence_ids\": [\"E10\"] }, { \"statement\": \"The student's last VLE activity was on the day of the end of week 4.\", \"evidence_ids\": [\"E15\"] }, { \"statement\": \"The student's total clicks are 1.51 times the median of the same module-presentation cohort.\", \"evidence_ids\": [\"E16\"] } ], \"model_inferences\": [ { \"statement\": \"The model estimates a 16% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"] }, { \"statement\": \"The student's mean score of 98 is associated with a decrease in the predicted risk by 21.9 percentage points.\", \"evidence_ids\": [\"X1\", \"E21\"] }, { \"statement\": \"The student's total clicks relative to the cohort median (1.51) are associated with a decrease in predicted risk by 5.7 percentage points.\", \"evidence_ids\": [\"X2\", \"E16\"] }, { \"statement\": \"The student's highest education level (A Level or Equivalent) is associated with a decrease in predicted risk by 4.0 percentage points.\", \"evidence_ids\": [\"X3\", \"E26\"] } ], \"recommendations\": [ { \"action\": \"Continue to monitor the student's engagement and performance, as their current data suggests a low risk of an unsuccessful outcome.\", \"rationale\": \"The student has high assessment scores, above-average VLE engagement, and active forum participation, which are all associated with a lower risk of an unsuccessful outcome according to the model.\" , \"evidence_ids\": [\"E21\", \"E6\", \"E7\", \"E10\", \"E15\", \"E16\", \"X1\", \"X2\", \"X3\"] }, { \"action\": \"Provide additional support or resources if the student's engagement drops below current levels, as this could increase their risk of an unsuccessful outcome.\", \"rationale\": \"The student's current engagement levels are above the cohort median, and a decrease in activity may be associated with an increased risk of an unsuccessful outcome.\" , \"evidence_ids\": [\"E16\", \"X2\"] } ], \"evidence_limitations\": [ \"The model's prediction of a 16% risk of an unsuccessful outcome is based on associations, not causality. It does not account for unobserved factors that may influence the student's performance or engagement.\" ] }",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has a mean score of 98 on assessments submitted before the end of week 4.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has 366 VLE clicks in weeks 3-4 (days 14-27).",
+    "evidence_ids": [
+     "E6"
+    ]
+   },
+   {
+    "statement": "The student has 221 VLE clicks in week 4 (days 21-27).",
+    "evidence_ids": [
+     "E7"
+    ]
+   },
+   {
+    "statement": "The student has clicked on discussion forums 204 times up to the end of week 4.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's last VLE activity was on the day of the end of week 4.",
+    "evidence_ids": [
+     "E15"
+    ]
+   },
+   {
+    "statement": "The student's total clicks are 1.51 times the median of the same module-presentation cohort.",
+    "evidence_ids": [
+     "E16"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 16% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The student's mean score of 98 is associated with a decrease in the predicted risk by 21.9 percentage points.",
+    "evidence_ids": [
+     "X1",
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student's total clicks relative to the cohort median (1.51) are associated with a decrease in predicted risk by 5.7 percentage points.",
+    "evidence_ids": [
+     "X2",
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student's highest education level (A Level or Equivalent) is associated with a decrease in predicted risk by 4.0 percentage points.",
+    "evidence_ids": [
+     "X3",
+     "E26"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Continue to monitor the student's engagement and performance, as their current data suggests a low risk of an unsuccessful outcome.",
+    "rationale": "The student has high assessment scores, above-average VLE engagement, and active forum participation, which are all associated with a lower risk of an unsuccessful outcome according to the model.",
+    "evidence_ids": [
+     "E21",
+     "E6",
+     "E7",
+     "E10",
+     "E15",
+     "E16",
+     "X1",
+     "X2",
+     "X3"
+    ]
+   },
+   {
+    "action": "Provide additional support or resources if the student's engagement drops below current levels, as this could increase their risk of an unsuccessful outcome.",
+    "rationale": "The student's current engagement levels are above the cohort median, and a decrease in activity may be associated with an increased risk of an unsuccessful outcome.",
+    "evidence_ids": [
+     "E16",
+     "X2"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of a 16% risk of an unsuccessful outcome is based on associations, not causality. It does not account for unobserved factors that may influence the student's performance or engagement."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 731,
+  "completion_tokens": 688,
+  "total_tokens": 1419,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 53.47,
+ "model": "qwen/qwen3-14b"
+}

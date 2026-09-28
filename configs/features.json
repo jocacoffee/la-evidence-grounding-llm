@@ -1,0 +1,31 @@
+{
+  "features": [
+    "num_of_prev_attempts",
+    "studied_credits",
+    "highest_education",
+    "date_registration",
+    "total_clicks",
+    "active_days",
+    "distinct_materials",
+    "pre_course_clicks",
+    "clicks_weeks_1_2",
+    "clicks_weeks_3_4",
+    "clicks_week_4",
+    "active_days_weeks_3_4",
+    "clicks_content",
+    "clicks_forum",
+    "clicks_quiz",
+    "clicks_homepage",
+    "clicks_resource",
+    "activity_trend",
+    "days_since_last_activity",
+    "clicks_vs_cohort_median",
+    "n_assessments_due",
+    "n_submissions",
+    "n_submitted_due",
+    "mean_score",
+    "n_late_submissions",
+    "submission_rate",
+    "has_banked_assessment"
+  ]
+}

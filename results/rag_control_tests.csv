@@ -1,0 +1,41 @@
+llm,contrast,a,b,metric,n_pairs,mean_a,mean_b,diff_a_minus_b,p_wilcoxon,p_holm
+qwen3.5-9b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_claim_rate,100,0.04311829836829836,0.05261771561771561,-0.009499417249417252,0.0884711731455506,0.2654135194366518
+qwen3.5-9b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_fact_rate,100,0.00833333333333333,0.01666666666666666,-0.00833333333333333,0.37722103813262675,1.0
+qwen3.5-9b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,evidence_coverage,100,0.9536888111888112,0.9587323232323232,-0.005043512043512048,0.8013209533018939,0.8013209533018939
+qwen3.5-9b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,factual_consistency,100,0.9911442364824716,0.9867062382062382,0.004437998276233567,0.5826377319977188,1.0
+qwen3.5-9b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_claim_rate,100,0.06137842712842712,0.04311829836829836,0.01826012876012877,0.31557855219251674,0.5271013678825978
+qwen3.5-9b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_fact_rate,100,0.0125,0.00833333333333333,0.004166666666666671,0.8131215681698385,1.0
+qwen3.5-9b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,evidence_coverage,100,0.8747781385281386,0.9536888111888112,-0.07891067266067267,1.1571646436404646e-08,4.6286585745618585e-08
+qwen3.5-9b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,factual_consistency,100,0.9807204184704185,0.9911442364824716,-0.010423818012053308,0.5452751958584128,1.0
+qwen3.5-9b,ranking (salient vs random 5),C3_rag,C7_random5,unsupported_claim_rate,100,0.06137842712842712,0.07720093795093795,-0.01582251082251082,0.2635506839412989,0.5271013678825978
+qwen3.5-9b,ranking (salient vs random 5),C3_rag,C7_random5,unsupported_fact_rate,100,0.0125,0.04366666666666666,-0.031166666666666662,0.032745165869086754,0.13098066347634701
+qwen3.5-9b,ranking (salient vs random 5),C3_rag,C7_random5,evidence_coverage,100,0.8747781385281386,0.9260054112554112,-0.05122727272727271,0.0005474849809529446,0.0010949699619058892
+qwen3.5-9b,ranking (salient vs random 5),C3_rag,C7_random5,factual_consistency,100,0.9807204184704185,0.983443722943723,-0.002723304473304473,0.9327626969487249,1.0
+qwen3.5-9b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_claim_rate,100,0.012768065268065263,0.04311829836829836,-0.03035023310023309,1.5100815634095494e-05,6.0403262536381975e-05
+qwen3.5-9b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_fact_rate,100,0.015333333333333327,0.00833333333333333,0.006999999999999999,0.5833245687572718,1.0
+qwen3.5-9b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,evidence_coverage,100,0.979475912975913,0.9536888111888112,0.0257871017871018,0.00020197776904465247,0.0006059333071339574
+qwen3.5-9b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,factual_consistency,100,0.9987777777777778,0.9911442364824716,0.007633541295306,0.19647688899195126,0.785907555967805
+gemma-4-e4b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_claim_rate,99,0.0,0.002705627705627705,-0.002705627705627705,0.6949115848947903,0.6949115848947903
+gemma-4-e4b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_fact_rate,99,0.0,0.0,0.0,,
+gemma-4-e4b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,evidence_coverage,99,0.9727152477152478,0.9739458072791406,-0.0012305595638928961,0.16234406776884736,0.3246881355376947
+gemma-4-e4b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,factual_consistency,98,1.0,0.9989795918367348,0.001020408163265306,0.8422569262528314,1.0
+gemma-4-e4b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_claim_rate,99,0.01827801827801827,0.0,0.01827801827801827,0.06874225217615253,0.20622675652845757
+gemma-4-e4b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_fact_rate,99,0.014141414141414142,0.0,0.014141414141414142,0.19044288579791513,0.38088577159583026
+gemma-4-e4b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,evidence_coverage,99,0.9180735930735932,0.9727152477152478,-0.05464165464165463,4.301197837195565e-05,0.00012903593511586696
+gemma-4-e4b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,factual_consistency,99,0.9949494949494949,1.0,-0.005050505050505051,0.8430219763697249,1.0
+gemma-4-e4b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_claim_rate,99,0.005231609019487807,0.0,0.005231609019487807,0.3407235595633399,0.6814471191266798
+gemma-4-e4b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_fact_rate,99,0.008417508417508414,0.0,0.008417508417508414,0.34071470899899425,0.38088577159583026
+gemma-4-e4b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,evidence_coverage,99,0.9609234480446601,0.9727152477152478,-0.011791799670587542,0.3231812645200778,0.3246881355376947
+gemma-4-e4b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,factual_consistency,99,0.9980716253443527,1.0,-0.001928374655647382,0.6949115848947903,1.0
+qwen3-14b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_claim_rate,1,0.0,0.0,0.0,,
+qwen3-14b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,unsupported_fact_rate,1,0.0,0.0,0.0,,
+qwen3-14b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,evidence_coverage,1,1.0,1.0,0.0,,
+qwen3-14b,format (IDs+statements vs JSON),C6_full_evidence,C2_student_data,factual_consistency,1,1.0,1.0,0.0,,
+qwen3-14b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_claim_rate,76,0.031545720361509835,0.006325910931174087,0.025219809430335745,0.013264103186754196,0.026528206373508393
+qwen3-14b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,unsupported_fact_rate,76,0.021052631578947368,0.0,0.021052631578947368,0.09815623553567128,0.09815623553567128
+qwen3-14b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,evidence_coverage,76,0.8962557909926332,0.9671972764078028,-0.07094148541516965,2.0118634669515546e-07,4.0237269339031093e-07
+qwen3-14b,selection (top-5 vs all 27),C3_rag,C6_full_evidence,factual_consistency,76,0.9867348660111817,0.994976076555024,-0.008241210543842123,0.5121409761739111,1.0
+qwen3-14b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_claim_rate,83,0.02044307767199333,0.006719184430027801,0.013723893241965528,0.035123851200604635,0.035123851200604635
+qwen3-14b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,unsupported_fact_rate,83,0.025100401606425692,0.0,0.025100401606425692,0.021698555260395463,0.04339711052079093
+qwen3-14b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,evidence_coverage,83,0.9620790855730614,0.9671834189906481,-0.005104333417586428,0.3175586733287873,0.3175586733287873
+qwen3-14b,model evidence vs all observed evidence,C4_shap_rag,C6_full_evidence,factual_consistency,83,0.9942999950903081,0.9941949616648413,0.00010503342546685922,0.7671457633495933,1.0

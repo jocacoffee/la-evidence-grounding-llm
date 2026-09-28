@@ -1,0 +1,202 @@
+{
+ "enrolment_id": "DDD_2014J_623968",
+ "condition": "C5_rag_risk",
+ "context_ids": [
+  "M1",
+  "E4",
+  "E27",
+  "E9",
+  "E16",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 623968, module DDD, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 40% (model inference, not an observed fact)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E4] VLE clicks before the module start (day < 0): 277\n[E27] Registration day relative to module start (negative = days before start): -156\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 73\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 2.35\n[E26] Highest education level on entry: Lower Than A Level\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student registered for the module 156 days before the start date.\", \"evidence_ids\": [\"E27\"]}, {\"statement\": \"The student has clicked on course content pages 73 times by the end of week 4.\", \"evidence_ids\": [\"E9\"]}, {\"statement\": \"The student's click volume is 2.35 times higher than the median for this module-presentation cohort.\", \"evidence_ids\": [\"E16\"]}, {\"statement\": \"The student's highest education level on entry was Lower Than A Level.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The predictive model estimates a 40% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"model_inferences\": [{\"statement\": \"The high pre-module engagement (277 clicks) and significantly above-median click volume (2.35x) suggest the student is actively exploring the material, which may be a protective factor against the predicted risk of failure.\", \"evidence_ids\": [\"E4\", \"E16\", \"M1\"]}], \"recommendations\": [{\"action\": \"Monitor engagement trends closely.\", \"rationale\": \"While current click volume is high relative to peers, the model predicts a 40% risk of failure. Ensure the high activity translates into successful assessment completion.\", \"evidence_ids\": [\"M1\", \"E16\"]}, {\"action\": \"Provide targeted support regarding academic expectations.\", \"rationale\": \"The student's entry education level is 'Lower Than A Level'. While their current engagement is high, they may face challenges with the module's academic rigour or pace compared to peers with higher prior qualifications.\", \"evidence_ids\": [\"E26\", \"M1\"]}, {\"action\": \"Encourage early submission of assignments.\", \"rationale\": \"Given the elevated risk of withdrawal or failure, proactively guiding the student on deadlines and assessment criteria can help mitigate the risk associated with their entry profile.\", \"evidence_ids\": [\"M1\"]}], \"evidence_limitations\": [\"The provided data only covers the first 4 weeks of the module; long-term engagement patterns and assessment performance are unknown.\", \"The predictive model's 40% failure risk is an inference based on limited early data and may change as the module progresses.\", \"There is no direct evidence of the student's current understanding of specific content or their ability to complete assessments, only their click behavior.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student registered for the module 156 days before the start date.",
+    "evidence_ids": [
+     "E27"
+    ]
+   },
+   {
+    "statement": "The student has clicked on course content pages 73 times by the end of week 4.",
+    "evidence_ids": [
+     "E9"
+    ]
+   },
+   {
+    "statement": "The student's click volume is 2.35 times higher than the median for this module-presentation cohort.",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry was Lower Than A Level.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The predictive model estimates a 40% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The high pre-module engagement (277 clicks) and significantly above-median click volume (2.35x) suggest the student is actively exploring the material, which may be a protective factor against the predicted risk of failure.",
+    "evidence_ids": [
+     "E4",
+     "E16",
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor engagement trends closely.",
+    "rationale": "While current click volume is high relative to peers, the model predicts a 40% risk of failure. Ensure the high activity translates into successful assessment completion.",
+    "evidence_ids": [
+     "M1",
+     "E16"
+    ]
+   },
+   {
+    "action": "Provide targeted support regarding academic expectations.",
+    "rationale": "The student's entry education level is 'Lower Than A Level'. While their current engagement is high, they may face challenges with the module's academic rigour or pace compared to peers with higher prior qualifications.",
+    "evidence_ids": [
+     "E26",
+     "M1"
+    ]
+   },
+   {
+    "action": "Encourage early submission of assignments.",
+    "rationale": "Given the elevated risk of withdrawal or failure, proactively guiding the student on deadlines and assessment criteria can help mitigate the risk associated with their entry profile.",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The provided data only covers the first 4 weeks of the module; long-term engagement patterns and assessment performance are unknown.",
+   "The predictive model's 40% failure risk is an inference based on limited early data and may change as the module progresses.",
+   "There is no direct evidence of the student's current understanding of specific content or their ability to complete assessments, only their click behavior."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 526,
+  "completion_tokens": 528,
+  "total_tokens": 1054,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 20.27,
+ "model": "qwen/qwen3.5-9b"
+}

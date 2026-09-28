@@ -1,0 +1,229 @@
+{
+ "enrolment_id": "CCC_2014J_624060",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E6",
+  "E7",
+  "E10",
+  "E16",
+  "E19",
+  "E21",
+  "E23",
+  "E24"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 624060, module CCC, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 48% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: submission_rate (value 0%, see E19) increases predicted risk by 16.2 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: clicks_vs_cohort_median (value 6.66, see E16) decreases predicted risk by 11.7 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: mean_score (value not available, see E21) increases predicted risk by 6.4 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E6] VLE clicks in weeks 3-4 (days 14-27): 724\n[E7] VLE clicks in week 4 (days 21-27): 395\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 1141\n[E16] Total clicks relative to the median of the same module-presentation cohort (1.0 = median): 6.66\n[E19] Submission rate of assessments due before the end of week 4: 0%\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: No score available: no assessment was submitted (and scored) before the end of week 4\n[E23] Has an assessment result transferred (banked) from a previous presentation: yes\n[E24] Number of previous attempts at this module: 1\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3-14b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{ \"observed_facts\": [ { \"statement\": \"The student has a submission rate of 0% for assessments due before the end of week 4 (E19).\", \"evidence_ids\": [\"E19\"] }, { \"statement\": \"The student has clicked 724 times on the VLE in weeks 3-4 (days 14-27) (E6).\", \"evidence_ids\": [\"E6\"] }, { \"statement\": \"The student has clicked 395 times on the VLE in week 4 (days 21-27) (E7).\", \"evidence_ids\": [\"E7\"] }, { \"statement\": \"The student has clicked 1141 times on discussion forums up to the end of week 4 (E10).\", \"evidence_ids\": [\"E10\"] }, { \"statement\": \"The student's total clicks relative to the median of their cohort is 6.66 (E16).\", \"evidence_ids\": [\"E16\"] }, { \"statement\": \"The student has no assessment scores available, as no assessments were submitted and scored before the end of week 4 (E21).\", \"evidence_ids\": [\"E21\"] } ], \"model_inferences\": [ { \"statement\": \"The model estimates a 48% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).\", \"evidence_ids\": [\"M1\"] }, { \"statement\": \"The submission rate (0%) increases the predicted risk of an unsuccessful outcome by 16.2 percentage points (X1).\", \"evidence_ids\": [\"X1\"] }, { \"statement\": \"The student's total clicks relative to the cohort median (6.66) decrease the predicted risk of an unsuccessful outcome by 11.7 percentage points (X2).\", \"evidence_ids\": [\"X2\"] }, { \"statement\": \"The mean score (not available) increases the predicted risk of an unsuccessful outcome by 6.4 percentage points (X3).\", \"evidence_ids\": [\"X3\"] } ], \"recommendations\": [ { \"action\": \"Monitor the student's submission behavior closely, as a 0% submission rate is strongly associated with increased risk of an unsuccessful outcome (X1).\", \"rationale\": \"The submission rate is a significant factor in the model's prediction of risk (X1).\", \"evidence_ids\": [\"X1\"] }, { \"action\": \"Encourage the student to submit assessments as soon as possible, given that no scores are available (E21).\", \"rationale\": \"The absence of assessment submissions increases the predicted risk of an unsuccessful outcome (X3).\", \"evidence_ids\": [\"E21\", \"X3\"] }, { \"action\": \"Consider providing additional support or resources to the student, as their submission rate is 0% (E19).\", \"rationale\": \"A lack of assessment submissions may indicate a barrier to engagement or understanding, which is associated with increased risk (X1).\", \"evidence_ids\": [\"E19\", \"X1\"] } ], \"evidence_limitations\": [ \"The model's prediction of an unsuccessful outcome is based on associations, not causality.\", \"There is no information about the student's personal circumstances or challenges that may affect their performance.\" ] }",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has a submission rate of 0% for assessments due before the end of week 4 (E19).",
+    "evidence_ids": [
+     "E19"
+    ]
+   },
+   {
+    "statement": "The student has clicked 724 times on the VLE in weeks 3-4 (days 14-27) (E6).",
+    "evidence_ids": [
+     "E6"
+    ]
+   },
+   {
+    "statement": "The student has clicked 395 times on the VLE in week 4 (days 21-27) (E7).",
+    "evidence_ids": [
+     "E7"
+    ]
+   },
+   {
+    "statement": "The student has clicked 1141 times on discussion forums up to the end of week 4 (E10).",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's total clicks relative to the median of their cohort is 6.66 (E16).",
+    "evidence_ids": [
+     "E16"
+    ]
+   },
+   {
+    "statement": "The student has no assessment scores available, as no assessments were submitted and scored before the end of week 4 (E21).",
+    "evidence_ids": [
+     "E21"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 48% probability of an unsuccessful outcome (Fail or Withdrawn) for this student (M1).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The submission rate (0%) increases the predicted risk of an unsuccessful outcome by 16.2 percentage points (X1).",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "statement": "The student's total clicks relative to the cohort median (6.66) decrease the predicted risk of an unsuccessful outcome by 11.7 percentage points (X2).",
+    "evidence_ids": [
+     "X2"
+    ]
+   },
+   {
+    "statement": "The mean score (not available) increases the predicted risk of an unsuccessful outcome by 6.4 percentage points (X3).",
+    "evidence_ids": [
+     "X3"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor the student's submission behavior closely, as a 0% submission rate is strongly associated with increased risk of an unsuccessful outcome (X1).",
+    "rationale": "The submission rate is a significant factor in the model's prediction of risk (X1).",
+    "evidence_ids": [
+     "X1"
+    ]
+   },
+   {
+    "action": "Encourage the student to submit assessments as soon as possible, given that no scores are available (E21).",
+    "rationale": "The absence of assessment submissions increases the predicted risk of an unsuccessful outcome (X3).",
+    "evidence_ids": [
+     "E21",
+     "X3"
+    ]
+   },
+   {
+    "action": "Consider providing additional support or resources to the student, as their submission rate is 0% (E19).",
+    "rationale": "A lack of assessment submissions may indicate a barrier to engagement or understanding, which is associated with increased risk (X1).",
+    "evidence_ids": [
+     "E19",
+     "X1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction of an unsuccessful outcome is based on associations, not causality.",
+   "There is no information about the student's personal circumstances or challenges that may affect their performance."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 762,
+  "completion_tokens": 734,
+  "total_tokens": 1496,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 57.34,
+ "model": "qwen/qwen3-14b"
+}

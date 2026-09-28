@@ -1,0 +1,235 @@
+{
+ "enrolment_id": "CCC_2014J_486877",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E3",
+  "E10",
+  "E14",
+  "E21",
+  "E22",
+  "E25",
+  "E26",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 486877, module CCC, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 44% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 4.9 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: n_late_submissions (value 1, see E22) increases predicted risk by 4.1 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: mean_score (value 78, see E21) decreases predicted risk by 3.9 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 31\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 33\n[E14] Activity trend index = (clicks weeks 3-4 - clicks weeks 1-2) / (clicks weeks 1-2 + clicks weeks 3-4); -1 = all activity in weeks 1-2, 0 = equal, +1 = all activity in weeks 3-4 (not a percent change): +0.67\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 78\n[E22] Assessments submitted after their deadline (before the end of week 4): 1\n[E25] Total credits of modules being studied in this presentation: 30\n[E26] Highest education level on entry: A Level or Equivalent\n[E27] Registration day relative to module start (negative = days before start): -123\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has accessed 31 distinct VLE materials and made 33 clicks on discussion forums by the end of week 4.\", \"evidence_ids\": [\"E3\", \"E10\"]}, {\"statement\": \"The student's activity trend index is +0.67, indicating higher engagement in weeks 3-4 compared to weeks 1-2.\", \"evidence_ids\": [\"E14\"]}, {\"statement\": \"The student has a mean assessment score of 78.\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student has one assessment submitted after its deadline.\", \"evidence_ids\": [\"E22\"]}, {\"statement\": \"The student's highest education level on entry was A Level or Equivalent.\", \"evidence_ids\": [\"E26\"]}, {\"statement\": \"The student registered 123 days before the module start date.\", \"evidence_ids\": [\"E27\"]}], \"model_inferences\": [{\"statement\": \"The predictive model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}, {\"statement\": \"The model associates having A Level or Equivalent education with a 4.9 percentage point decrease in predicted risk.\", \"evidence_ids\": [\"X1\", \"E26\"]}, {\"statement\": \"The model associates having 1 late submission with a 4.1 percentage point increase in predicted risk.\", \"evidence_ids\": [\"X2\", \"E22\"]}, {\"statement\": \"The model associates a mean score of 78 with a 3.9 percentage point decrease in predicted risk.\", \"evidence_ids\": [\"X3\", \"E21\"]}], \"recommendations\": [{\"action\": \"Monitor the single late submission closely.\", \"rationale\": \"The model indicates that late submissions are a significant risk factor (rank 2), contributing to the elevated predicted risk of 44%. Ensuring timely submission of the remaining assessments is critical.\", \"evidence_ids\": [\"X2\", \"E22\", \"M1\"]}, {\"action\": \"Maintain current engagement levels and encourage continued participation in weeks 5-6.\", \"rationale\": \"The student shows a positive activity trend (+0.67), suggesting engagement is increasing. Sustaining this momentum is important as the module progresses.\", \"evidence_ids\": [\"E14\"]}, {\"action\": \"Provide general encouragement regarding the strong academic performance.\", \"rationale\": \"The student's mean score of 78 is associated with a lower predicted risk in the model.\", \"evidence_ids\": [\"X3\", \"E21\"]}], \"evidence_limitations\": [\"The predictive model estimates a 44% risk of failure/withdrawal, which is high, but the specific reasons for this high risk beyond the identified features (late submissions, education level, scores) are not fully detailed in the provided SHAP values.\", \"The data only covers the first 4 weeks of the module; long-term trends and performance in subsequent weeks are unknown.\", \"The model attributes risk reduction to 'highest_education' (A Level), but this is a static entry characteristic and cannot be changed by the educator during the current module. The actionable levers are primarily related to submission timeliness and maintaining engagement.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has accessed 31 distinct VLE materials and made 33 clicks on discussion forums by the end of week 4.",
+    "evidence_ids": [
+     "E3",
+     "E10"
+    ]
+   },
+   {
+    "statement": "The student's activity trend index is +0.67, indicating higher engagement in weeks 3-4 compared to weeks 1-2.",
+    "evidence_ids": [
+     "E14"
+    ]
+   },
+   {
+    "statement": "The student has a mean assessment score of 78.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has one assessment submitted after its deadline.",
+    "evidence_ids": [
+     "E22"
+    ]
+   },
+   {
+    "statement": "The student's highest education level on entry was A Level or Equivalent.",
+    "evidence_ids": [
+     "E26"
+    ]
+   },
+   {
+    "statement": "The student registered 123 days before the module start date.",
+    "evidence_ids": [
+     "E27"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The predictive model estimates a 44% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   },
+   {
+    "statement": "The model associates having A Level or Equivalent education with a 4.9 percentage point decrease in predicted risk.",
+    "evidence_ids": [
+     "X1",
+     "E26"
+    ]
+   },
+   {
+    "statement": "The model associates having 1 late submission with a 4.1 percentage point increase in predicted risk.",
+    "evidence_ids": [
+     "X2",
+     "E22"
+    ]
+   },
+   {
+    "statement": "The model associates a mean score of 78 with a 3.9 percentage point decrease in predicted risk.",
+    "evidence_ids": [
+     "X3",
+     "E21"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor the single late submission closely.",
+    "rationale": "The model indicates that late submissions are a significant risk factor (rank 2), contributing to the elevated predicted risk of 44%. Ensuring timely submission of the remaining assessments is critical.",
+    "evidence_ids": [
+     "X2",
+     "E22",
+     "M1"
+    ]
+   },
+   {
+    "action": "Maintain current engagement levels and encourage continued participation in weeks 5-6.",
+    "rationale": "The student shows a positive activity trend (+0.67), suggesting engagement is increasing. Sustaining this momentum is important as the module progresses.",
+    "evidence_ids": [
+     "E14"
+    ]
+   },
+   {
+    "action": "Provide general encouragement regarding the strong academic performance.",
+    "rationale": "The student's mean score of 78 is associated with a lower predicted risk in the model.",
+    "evidence_ids": [
+     "X3",
+     "E21"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The predictive model estimates a 44% risk of failure/withdrawal, which is high, but the specific reasons for this high risk beyond the identified features (late submissions, education level, scores) are not fully detailed in the provided SHAP values.",
+   "The data only covers the first 4 weeks of the module; long-term trends and performance in subsequent weeks are unknown.",
+   "The model attributes risk reduction to 'highest_education' (A Level), but this is a static entry characteristic and cannot be changed by the educator during the current module. The actionable levers are primarily related to submission timeliness and maintaining engagement."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 811,
+  "completion_tokens": 702,
+  "total_tokens": 1513,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 96.88,
+ "model": "qwen/qwen3.5-9b"
+}

@@ -1,0 +1,193 @@
+{
+ "enrolment_id": "FFF_2014J_442347",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E4",
+  "E11",
+  "E20",
+  "E21",
+  "E24",
+  "E25",
+  "E26"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 442347, module FFF, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 43% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 85.3, see E21) decreases predicted risk by 13.9 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: highest_education (value Lower Than A Level, see E26) increases predicted risk by 7.2 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: num_of_prev_attempts (value 1, see E24) increases predicted risk by 4.1 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E4] VLE clicks before the module start (day < 0): 306\n[E11] Clicks on quizzes up to the end of week 4: 203\n[E20] Total assessment submissions (any deadline) before the end of week 4: 3\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 85.3\n[E24] Number of previous attempts at this module: 1\n[E25] Total credits of modules being studied in this presentation: 120\n[E26] Highest education level on entry: Lower Than A Level\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "google/gemma-4-e4b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has accessed the VLE 306 times before the module started. (evidence_ids: [E4])\", \"evidence_ids\": [\"E4\"]}, {\"statement\": \"The student has accessed quizzes 203 times up to the end of week 4. (evidence_ids: [E11])\", \"evidence_ids\": [\"E11\"]}, {\"statement\": \"The student has made 3 total assessment submissions before the end of week 4. (evidence_ids: [E20])\", \"evidence_ids\": [\"E20\"]}, {\"statement\": \"The mean score of assessments submitted before the end of week 4 is 85.3. (evidence_ids: [E21])\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student has 1 previous attempt at this module. (evidence_ids: [E24])\", \"evidence_ids\": [\"E24\"]}, {\"statement\": \"The student's highest education level upon entry is Lower Than A Level. (evidence_ids: [E26])\", \"evidence_ids\": [\"E26\"]}], \"model_inferences\": [{\"statement\": \"The model estimates a 43% probability of an unsuccessful outcome (Fail or Withdrawn). (evidence_ids: [\", \"evidence_ids\": []}], \"recommendations\": [{\"action\": \"Monitor engagement and performance trends.\", \"rationale\": \"The model indicates a 43% estimated probability of an unsuccessful outcome, which is associated with factors including the mean assessment score (85.3), highest education level (Lower Than A Level), and number of previous attempts (1).\", \"evidence_ids\": [\"E21\", \"E26\", \"E24\"]}], \"evidence_limitations\": [\"The model's prediction is based on associations between input features and the predicted outcome, not necessarily direct causation. The current data only reflects activity up to the end of week 4.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has accessed the VLE 306 times before the module started. (evidence_ids: [E4])",
+    "evidence_ids": [
+     "E4"
+    ]
+   },
+   {
+    "statement": "The student has accessed quizzes 203 times up to the end of week 4. (evidence_ids: [E11])",
+    "evidence_ids": [
+     "E11"
+    ]
+   },
+   {
+    "statement": "The student has made 3 total assessment submissions before the end of week 4. (evidence_ids: [E20])",
+    "evidence_ids": [
+     "E20"
+    ]
+   },
+   {
+    "statement": "The mean score of assessments submitted before the end of week 4 is 85.3. (evidence_ids: [E21])",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has 1 previous attempt at this module. (evidence_ids: [E24])",
+    "evidence_ids": [
+     "E24"
+    ]
+   },
+   {
+    "statement": "The student's highest education level upon entry is Lower Than A Level. (evidence_ids: [E26])",
+    "evidence_ids": [
+     "E26"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 43% probability of an unsuccessful outcome (Fail or Withdrawn). (evidence_ids: [",
+    "evidence_ids": []
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor engagement and performance trends.",
+    "rationale": "The model indicates a 43% estimated probability of an unsuccessful outcome, which is associated with factors including the mean assessment score (85.3), highest education level (Lower Than A Level), and number of previous attempts (1).",
+    "evidence_ids": [
+     "E21",
+     "E26",
+     "E24"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The model's prediction is based on associations between input features and the predicted outcome, not necessarily direct causation. The current data only reflects activity up to the end of week 4."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 734,
+  "completion_tokens": 433,
+  "total_tokens": 1167,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 19.64,
+ "model": "google/gemma-4-e4b"
+}

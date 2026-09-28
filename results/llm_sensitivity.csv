@@ -1,0 +1,10 @@
+model,condition,n,risk_band_stated_share,stated_band_dist,spearman_band_vs_model_risk,auroc_band_vs_true_outcome,band_matches_model_band,action_genericity_mean_cosine,distinct_action_texts
+gemma-4-e4b,C2_student_data,100,0.0,{},,,,0.49984243203448514,0.23
+gemma-4-e4b,C3_rag,100,0.0,{},,,,0.5268632538688601,0.17
+gemma-4-e4b,C4_shap_rag,100,0.96,"{'high': 38, 'moderate': 30, 'low': 28}",0.9395453813429245,0.7881944444444444,0.9791666666666666,0.4619727943970267,0.2
+qwen3-14b,C2_student_data,100,0.0,{},,,,0.0,0.02
+qwen3-14b,C3_rag,100,0.02,{'low': 2},,,0.5,0.20509832601433578,0.91
+qwen3-14b,C4_shap_rag,100,0.83,"{'low': 32, 'high': 29, 'moderate': 22}",0.7910561618034412,0.7814685314685315,0.9036144578313253,0.260690964351484,1.0
+qwen3.5-9b,C2_student_data,100,0.61,"{'high': 38, 'low': 23}",0.5456093156794223,0.7456709956709956,0.6065573770491803,0.16856956598862005,0.98
+qwen3.5-9b,C3_rag,100,0.07,{'high': 7},,0.5,0.5714285714285714,0.15842138985907442,1.0
+qwen3.5-9b,C4_shap_rag,100,1.0,"{'high': 38, 'moderate': 32, 'low': 30}",0.9409827548124808,0.778,0.98,0.1467671241454557,0.99

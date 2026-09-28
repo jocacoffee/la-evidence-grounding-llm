@@ -1,0 +1,17 @@
+model,true,pred_Distinction,pred_Pass,pred_Fail,pred_Withdrawn
+Majority class,Distinction,0,1164,0,0
+Majority class,Pass,0,4292,0,0
+Majority class,Fail,0,1975,0,0
+Majority class,Withdrawn,0,1783,0,0
+Logistic Regression,Distinction,825,170,57,112
+Logistic Regression,Pass,1769,1104,463,956
+Logistic Regression,Fail,429,291,592,663
+Logistic Regression,Withdrawn,371,258,374,780
+XGBoost,Distinction,799,205,58,102
+XGBoost,Pass,1478,1339,638,837
+XGBoost,Fail,310,345,702,618
+XGBoost,Withdrawn,300,317,450,716
+XGBoost (no scores),Distinction,664,269,107,124
+XGBoost (no scores),Pass,1407,1284,863,738
+XGBoost (no scores),Fail,257,378,827,513
+XGBoost (no scores),Withdrawn,254,311,507,711

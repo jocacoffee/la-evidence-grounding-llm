@@ -1,0 +1,197 @@
+{
+ "enrolment_id": "BBB_2014J_684687",
+ "condition": "C5_rag_risk",
+ "context_ids": [
+  "M1",
+  "E21",
+  "E9",
+  "E3",
+  "E7",
+  "E8"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 684687, module BBB, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 94% (model inference, not an observed fact)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 1\n[E9] Clicks on course content pages (oucontent) up to the end of week 4: 58\n[E3] Number of distinct VLE materials accessed up to the end of week 4: 31\n[E7] VLE clicks in week 4 (days 21-27): 72\n[E8] Days with VLE activity in weeks 3-4 (out of 14): 9\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "qwen/qwen3.5-9b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has submitted an assessment with a mean score of 1.\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student has accessed 31 distinct VLE materials and made 58 total clicks on course content pages up to the end of week 4.\", \"evidence_ids\": [\"E3\", \"E9\"]}, {\"statement\": \"The student made 72 VLE clicks specifically during week 4.\", \"evidence_ids\": [\"E7\"]}, {\"statement\": \"The student was active on the VLE on 9 out of the 14 days in weeks 3 and 4 combined.\", \"evidence_ids\": [\"E8\"]}], \"model_inferences\": [{\"statement\": \"The predictive model estimates a 94% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"recommendations\": [{\"action\": \"Initiate immediate contact with the student to review the assessment score of 1.\", \"rationale\": \"A score of 1 indicates a critical failure to meet learning outcomes, which is a primary driver of the high risk of unsuccessful outcome.\", \"evidence_ids\": [\"E21\", \"M1\"]}, {\"action\": \"Discuss the discrepancy between the low assessment score and the moderate level of engagement (31 materials accessed, 9 active days).\", \"rationale\": \"While the student is accessing materials, the resulting assessment performance suggests a potential issue with comprehension, application, or submission quality that requires intervention.\", \"evidence_ids\": [\"E21\", \"E3\", \"E8\", \"M1\"]}, {\"action\": \"Clarify assessment expectations and provide targeted support resources immediately.\", \"rationale\": \"The high predicted risk of failure suggests the student may not understand how to apply the content they are accessing to the specific assessment requirements.\", \"evidence_ids\": [\"M1\"]}], \"evidence_limitations\": [\"The provided data only covers the first four weeks of the module; long-term trends and performance in subsequent weeks are unknown.\", \"The predictive model indicates a very high risk of failure, but the specific reasons for this prediction beyond the current low score are not detailed in the evidence.\", \"There is no data regarding the student's prior knowledge, personal circumstances, or attendance at synchronous sessions (if any).\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has submitted an assessment with a mean score of 1.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student has accessed 31 distinct VLE materials and made 58 total clicks on course content pages up to the end of week 4.",
+    "evidence_ids": [
+     "E3",
+     "E9"
+    ]
+   },
+   {
+    "statement": "The student made 72 VLE clicks specifically during week 4.",
+    "evidence_ids": [
+     "E7"
+    ]
+   },
+   {
+    "statement": "The student was active on the VLE on 9 out of the 14 days in weeks 3 and 4 combined.",
+    "evidence_ids": [
+     "E8"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The predictive model estimates a 94% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Initiate immediate contact with the student to review the assessment score of 1.",
+    "rationale": "A score of 1 indicates a critical failure to meet learning outcomes, which is a primary driver of the high risk of unsuccessful outcome.",
+    "evidence_ids": [
+     "E21",
+     "M1"
+    ]
+   },
+   {
+    "action": "Discuss the discrepancy between the low assessment score and the moderate level of engagement (31 materials accessed, 9 active days).",
+    "rationale": "While the student is accessing materials, the resulting assessment performance suggests a potential issue with comprehension, application, or submission quality that requires intervention.",
+    "evidence_ids": [
+     "E21",
+     "E3",
+     "E8",
+     "M1"
+    ]
+   },
+   {
+    "action": "Clarify assessment expectations and provide targeted support resources immediately.",
+    "rationale": "The high predicted risk of failure suggests the student may not understand how to apply the content they are accessing to the specific assessment requirements.",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The provided data only covers the first four weeks of the module; long-term trends and performance in subsequent weeks are unknown.",
+   "The predictive model indicates a very high risk of failure, but the specific reasons for this prediction beyond the current low score are not detailed in the evidence.",
+   "There is no data regarding the student's prior knowledge, personal circumstances, or attendance at synchronous sessions (if any)."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 534,
+  "completion_tokens": 495,
+  "total_tokens": 1029,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 19.34,
+ "model": "qwen/qwen3.5-9b"
+}

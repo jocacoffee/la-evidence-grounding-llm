@@ -1,0 +1,189 @@
+{
+ "enrolment_id": "DDD_2014J_645864",
+ "condition": "C4_shap_rag",
+ "context_ids": [
+  "M1",
+  "X1",
+  "X2",
+  "X3",
+  "E2",
+  "E10",
+  "E21",
+  "E25",
+  "E26",
+  "E27"
+ ],
+ "system_prompt": "You are a decision-support assistant for educators in an online distance-learning university.\nYou write for the educator (tutor), not for the student.\nRules:\n1. Use only the information provided in the context.\n2. Clearly separate observed facts (recorded data) from inferences (model predictions or your own interpretation).\n3. Do not invent characteristics, circumstances or data about the student.\n4. Do not diagnose the student (no psychological, medical or personal diagnoses).\n5. Do not claim causality; describe associations only.\n6. Do not invent specific difficulties (e.g., topics, skills, personal problems) that are not present in the data.\n7. Give general, actionable recommendations that are compatible with the evidence.\n8. When evidence items have IDs (e.g., E3, M1, X2), cite the IDs you use in \"evidence_ids\"; otherwise leave \"evidence_ids\" empty.\n9. If the information is insufficient to support a conclusion or a specific recommendation, say so in \"evidence_limitations\".\nAnswer only with a JSON object that follows the required schema.",
+ "user_prompt": "TASK: Based only on the information provided, generate a concise educational decision-support recommendation for an educator.\n\nSTUDENT: student ID 645864, module DDD, presentation 2014J.\nTIME POINT: end of week 4 of the module presentation (only information recorded up to this point exists).\n\nCONTEXT - PREDICTIVE MODEL OUTPUT (model inference, not an observed fact):\n[M1] Model-estimated probability of an unsuccessful outcome (Fail or Withdrawn): 70% (model inference, not an observed fact)\n\nCONTEXT - MODEL EXPLANATION (SHAP: features that most changed the model's predicted risk for this student; associations in the model, not causes):\n[X1] SHAP rank 1: mean_score (value 55, see E21) increases predicted risk by 26.4 percentage points (association in the model, not a cause)\n[X2] SHAP rank 2: highest_education (value A Level or Equivalent, see E26) decreases predicted risk by 3.4 percentage points (association in the model, not a cause)\n[X3] SHAP rank 3: active_days (value 32, see E2) decreases predicted risk by 2.5 percentage points (association in the model, not a cause)\n\nCONTEXT - RETRIEVED EVIDENCE (observed learning analytics data for this student):\n[E2] Number of distinct days with VLE activity up to the end of week 4: 32\n[E10] Clicks on discussion forums (forumng) up to the end of week 4: 137\n[E21] Mean score (0-100) of assessments submitted before the end of week 4: 55\n[E25] Total credits of modules being studied in this presentation: 120\n[E26] Highest education level on entry: A Level or Equivalent\n[E27] Registration day relative to module start (negative = days before start): -121\n\nDo not introduce factual claims that are not supported by the provided evidence.\n\nReturn the JSON object now.",
+ "request_params": {
+  "model": "google/gemma-4-e4b",
+  "temperature": 0.0,
+  "seed": 42,
+  "max_tokens": 1500,
+  "reasoning_effort": "none",
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "recommendation",
+    "strict": true,
+    "schema": {
+     "type": "object",
+     "properties": {
+      "observed_facts": {
+       "type": "array",
+       "maxItems": 6,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "model_inferences": {
+       "type": "array",
+       "maxItems": 4,
+       "items": {
+        "type": "object",
+        "properties": {
+         "statement": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "statement",
+         "evidence_ids"
+        ]
+       }
+      },
+      "recommendations": {
+       "type": "array",
+       "maxItems": 3,
+       "items": {
+        "type": "object",
+        "properties": {
+         "action": {
+          "type": "string"
+         },
+         "rationale": {
+          "type": "string"
+         },
+         "evidence_ids": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         }
+        },
+        "required": [
+         "action",
+         "rationale",
+         "evidence_ids"
+        ]
+       }
+      },
+      "evidence_limitations": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "observed_facts",
+      "model_inferences",
+      "recommendations",
+      "evidence_limitations"
+     ]
+    }
+   }
+  }
+ },
+ "raw_content": "{\"observed_facts\": [{\"statement\": \"The student has been registered in the module for 120 credits.\", \"evidence_ids\": [\"E25\"]}, {\"statement\": \"The student has accessed the VLE on 32 distinct days up to the end of week 4.\", \"evidence_ids\": [\"E2\"]}, {\"statement\": \"The student has made 137 clicks on discussion forums up to the end of week 4.\", \"evidence_ids\": [\"E10\"]}, {\"statement\": \"The mean score on assessments submitted before the end of week 4 is 55.\", \"evidence_ids\": [\"E21\"]}, {\"statement\": \"The student's highest education level upon entry was A Level or Equivalent.\", \"evidence_ids\": [\"E26\"]}], \"model_inferences\": [{\"statement\": \"The model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).\", \"evidence_ids\": [\"M1\"]}], \"recommendations\": [{\"action\": \"Monitor the student's engagement and performance trends.\", \"rationale\": \"The model indicates a high predicted risk of an unsuccessful outcome (70%) [M1], which is associated with the current mean assessment score of 55 [E21]. The student has shown activity across 32 days [E2] and high forum interaction (137 clicks) [E10].\", \"evidence_ids\": [\"M1\", \"E21\", \"E2\", \"E10\"]}], \"evidence_limitations\": [\"The current data only reflects activity up to the end of week 4, and the model's prediction is based on associations, not causation. The factors contributing to the predicted risk are complex and involve multiple variables.\"]}",
+ "parsed": {
+  "observed_facts": [
+   {
+    "statement": "The student has been registered in the module for 120 credits.",
+    "evidence_ids": [
+     "E25"
+    ]
+   },
+   {
+    "statement": "The student has accessed the VLE on 32 distinct days up to the end of week 4.",
+    "evidence_ids": [
+     "E2"
+    ]
+   },
+   {
+    "statement": "The student has made 137 clicks on discussion forums up to the end of week 4.",
+    "evidence_ids": [
+     "E10"
+    ]
+   },
+   {
+    "statement": "The mean score on assessments submitted before the end of week 4 is 55.",
+    "evidence_ids": [
+     "E21"
+    ]
+   },
+   {
+    "statement": "The student's highest education level upon entry was A Level or Equivalent.",
+    "evidence_ids": [
+     "E26"
+    ]
+   }
+  ],
+  "model_inferences": [
+   {
+    "statement": "The model estimates a 70% probability of an unsuccessful outcome (Fail or Withdrawn).",
+    "evidence_ids": [
+     "M1"
+    ]
+   }
+  ],
+  "recommendations": [
+   {
+    "action": "Monitor the student's engagement and performance trends.",
+    "rationale": "The model indicates a high predicted risk of an unsuccessful outcome (70%) [M1], which is associated with the current mean assessment score of 55 [E21]. The student has shown activity across 32 days [E2] and high forum interaction (137 clicks) [E10].",
+    "evidence_ids": [
+     "M1",
+     "E21",
+     "E2",
+     "E10"
+    ]
+   }
+  ],
+  "evidence_limitations": [
+   "The current data only reflects activity up to the end of week 4, and the model's prediction is based on associations, not causation. The factors contributing to the predicted risk are complex and involve multiple variables."
+  ]
+ },
+ "json_ok": true,
+ "usage": {
+  "prompt_tokens": 717,
+  "completion_tokens": 372,
+  "total_tokens": 1089,
+  "completion_tokens_details": {
+   "reasoning_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "seconds": 17.99,
+ "model": "google/gemma-4-e4b"
+}
